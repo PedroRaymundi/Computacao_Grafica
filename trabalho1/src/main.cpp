@@ -102,3 +102,11 @@ int main(void){
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
+
+// TODO: unity build because we are chads
+#ifdef _MSC_BUILD
+#include "../lib/initsRay.cpp"
+#include "../lib/objects.cpp"
+#include "glad.c"
+#endif
+

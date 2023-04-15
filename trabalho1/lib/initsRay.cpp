@@ -78,19 +78,17 @@ GLuint init_shaders(bool two_dimensional) {
     if(isCompiled == GL_FALSE){
 
         //descobrindo o tamanho do log de erro
-        int infoLength = 512;
+        int infoLength;
         glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &infoLength);
 
         //recuperando o log de erro e imprimindo na tela
-        char info[infoLength];
+        char *info = (char*) malloc(infoLength);
         glGetShaderInfoLog(vertex, infoLength, NULL, info);
 
         printf("Erro de compilacao no Vertex Shader.\n");
-        printf("--> %s\n",&info);
-
+        printf("--> %s\n", info);
+        free(info);
     }
-
-    
 
     // Compilando o Fragment Shader e verificando erros
     glCompileShader(fragment);
@@ -100,16 +98,16 @@ GLuint init_shaders(bool two_dimensional) {
     if(isCompiled == GL_FALSE){
 
         //descobrindo o tamanho do log de erro
-        int infoLength = 512;
+        int infoLength;
         glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &infoLength);
 
         //recuperando o log de erro e imprimindo na tela
-        char info[infoLength];
+        char *info = (char*) malloc(infoLength);
         glGetShaderInfoLog(fragment, infoLength, NULL, info);
 
         printf("Erro de compilacao no Fragment Shader.\n");
-        printf("--> %s\n",&info);
-
+        printf("--> %s\n", info);
+        free(info);
     }
 
     // Associando os programas compilado ao programa principal
