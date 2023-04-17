@@ -1,26 +1,24 @@
 #include "customLib/objects.hpp"
 
-base_object::base_object(int _nvertices) : nvertices(_nvertices){
+base_object::base_object(int _nvertices, int _position_on_vector) : nvertices(_nvertices), position_on_vector(_position_on_vector){
     vertices = (coordinates*) malloc(sizeof(coordinates)*nvertices);
-    position_on_vector = -1;
 }
 
 void base_object::delete_object(void) {
     free(vertices);
 }
 
-void base_object::draw_object(GLint loc, GLint loc_color, GLuint program, float mat_rotation[16], int B) {
+void base_object::draw_object(GLint loc, GLint loc_color, GLuint program, float mat_transform[16], float R, float G, float B, float opaccity) {
     loc = glGetUniformLocation(program, "mat_transformation");
-    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_rotation);
-
-        //hexagono
-    glDrawArrays(GL_TRIANGLE_FAN, position_on_vector, (sizeof(coordinates)*nvertices));
-                            // R, G, B, opac
-    glUniform4f(loc_color, 1, 0, B, 1.0);
+    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform);
+    //método, início (n entendi), número de coordenadas
+    glDrawArrays(GL_TRIANGLE_FAN, position_on_vector, nvertices);
+    glUniform4f(loc_color, R, G, B, opaccity);
 }
 
-objects_handler* vectorize_objects(base_object* objects, int nobjects) {
-    objects_handler *ohandler = (objects_handler*) malloc(sizeof(objects_handler));
+vertices_accumulator* vectorize_objects(std::vector<base_object> objects) {
+    vertices_accumulator *ohandler = (vertices_accumulator*) malloc(sizeof(vertices_accumulator));
+    int nobjects = objects.size();
     int k = 0;
 
     ohandler->nvertices = 0;

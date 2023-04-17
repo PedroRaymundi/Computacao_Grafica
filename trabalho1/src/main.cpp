@@ -6,6 +6,7 @@
 #include "customLib/objects.hpp"
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 /*
 cd bin
@@ -19,27 +20,36 @@ int main(void){
     GLuint program = init_shaders(true);
 
     // Preparando dados para enviar a GP
-    int nobjects = 2;
-    base_object* total_objects = (base_object*) malloc(sizeof(base_object)*nobjects);
-    base_object sq1(4);
+    std::vector<base_object> total_objects;
+    base_object sq1(4, 0);
     sq1.vertices[0] = { -0.5f, +0.5f }; 
     sq1.vertices[1] = { +0.5f, +0.5f };
     sq1.vertices[2] = { +0.5f, -0.5f };
     sq1.vertices[3] = { -0.5f, -0.5f };
-    base_object sq2(4);
-    sq2.vertices[0] = { -0.05f, +0.05f }; 
-    sq2.vertices[1] = { +0.05f, +0.05f };
-    sq2.vertices[2] = { +0.05f, -0.05f };
-    sq2.vertices[3] = { -0.05f, -0.05f };
+    total_objects.push_back(sq1);
 
-    total_objects[0] = sq1;
-    total_objects[1] = sq2;
-    sq1.position_on_vector = 0;
-    sq2.position_on_vector = sq1.nvertices;
+    base_object sq2(4, sq1.nvertices);
+    sq2.vertices[0] = { -0.35f, +0.35f }; 
+    sq2.vertices[1] = { +0.35f, +0.35f };
+    sq2.vertices[2] = { +0.35f, -0.35f };
+    sq2.vertices[3] = { -0.35f, -0.35f };
+    total_objects.push_back(sq2);
 
-    objects_handler* obj_handler = vectorize_objects(total_objects, nobjects);
+    base_object sq3(4, sq1.nvertices+sq2.nvertices);
+    sq3.vertices[0] = { -0.25f, +0.25f }; 
+    sq3.vertices[1] = { +0.25f, +0.25f };
+    sq3.vertices[2] = { +0.25f, -0.25f };
+    sq3.vertices[3] = { -0.25f, -0.25f };
+    total_objects.push_back(sq3);
 
-    printf("%f %f\n", obj_handler->all_objects[0].x, obj_handler->all_objects[0].y);
+    base_object sq4(4, sq1.nvertices+sq2.nvertices+sq3.nvertices);
+    sq4.vertices[0] = { -0.05f, +0.05f }; 
+    sq4.vertices[1] = { +0.05f, +0.05f };
+    sq4.vertices[2] = { +0.05f, -0.05f };
+    sq4.vertices[3] = { -0.05f, -0.05f };
+    total_objects.push_back(sq4);
+
+    vertices_accumulator* vaccumulator = vectorize_objects(total_objects);
 
     GLuint buffer;
     glGenBuffers(1, &buffer);
@@ -47,13 +57,13 @@ int main(void){
 
     
     // Abaixo, nós enviamos todo o conteúdo da variável vertices.
-    glBufferData(GL_ARRAY_BUFFER, sizeof(coordinates)*obj_handler->nvertices, obj_handler->all_objects, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(coordinates)*vaccumulator->nvertices, vaccumulator->all_objects, GL_DYNAMIC_DRAW);
 
 
     // Associando variáveis do programa GLSL (Vertex Shaders) com nossos dados
     GLint loc = glGetAttribLocation(program, "position");
     glEnableVertexAttribArray(loc);
-    glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, sizeof(obj_handler->all_objects[0]), (void*) 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
+    glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, sizeof(vaccumulator->all_objects[0]), (void*) 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
  
     // Associando variávels do programa GLSL (Fragment Shader) para definir cores
     GLint loc_color = glGetUniformLocation(program, "color");
@@ -79,14 +89,17 @@ int main(void){
         s = sin( ((angulo) * M_PI / 180.0) );
 
         float mat_rotation[16] = {
-            c, -s, 0.0f, 0.0f,
-            s, c, 0.0f, 0.0f,
+            1, 0, 0.0f, 0.0f,
+            0, 1, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
             0.0f, 0.0f, 0.0f, 1.0f
         };
 
-        sq1.draw_object(loc, loc_color, program, mat_rotation, 1);
-        sq2.draw_object(loc, loc_color, program, mat_rotation, 0);
+        //A COR TA INDO EM ORDEM, MAS COMEÇA PELO ÚLTIMO (?????????????????????)
+        sq1.draw_object(loc, loc_color, program, mat_rotation, 0, 0, 1, 1.0f);
+        sq2.draw_object(loc, loc_color, program, mat_rotation, 0, 1, 0, 1.0f);
+        sq3.draw_object(loc, loc_color, program, mat_rotation, 1, 0, 0, 1.0f);
+        sq4.draw_object(loc, loc_color, program, mat_rotation, 1, 1, 1, 1.0f);
         
         glfwSwapBuffers(window);
         
@@ -94,8 +107,10 @@ int main(void){
  
     sq1.delete_object();
     sq2.delete_object();
-    free(obj_handler->all_objects);
-    free(obj_handler);
+    sq3.delete_object();
+    sq4.delete_object();
+    free(vaccumulator->all_objects);
+    free(vaccumulator);
 
     glfwDestroyWindow(window);
  

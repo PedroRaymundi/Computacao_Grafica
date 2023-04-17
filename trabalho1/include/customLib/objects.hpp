@@ -6,15 +6,16 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <iostream>
+#include <vector>
 
 typedef struct __coordinates__{
     float x, y;
 } coordinates;
 
-typedef struct __objects_handler__ {
+typedef struct __vertices_accumulator__ {
     int nvertices;
     coordinates* all_objects;
-} objects_handler;
+} vertices_accumulator;
 
 
 class base_object {  
@@ -23,11 +24,12 @@ class base_object {
         int position_on_vector;
         coordinates *vertices;
 
-        base_object(int _nvertices);
+        base_object(int _nvertices, int _position_on_vector);
         void delete_object(void);
-        void draw_object(GLint loc, GLint loc_color, GLuint program, float mat_rotation[16], int B);
+        void draw_object(GLint loc, GLint loc_color, GLuint program, float mat_transform[16], float R, float G, float B, float opaccity);
 };
 
-objects_handler* vectorize_objects(base_object* objects, int nobjects);
+
+vertices_accumulator* vectorize_objects(std::vector<base_object> objects);
 
 #endif
