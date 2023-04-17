@@ -95,7 +95,6 @@ int main(void){
             0.0f, 0.0f, 0.0f, 1.0f
         };
 
-        //A COR TA INDO EM ORDEM, MAS COMEÇA PELO ÚLTIMO (?????????????????????)
         sq1.draw_object(loc, loc_color, program, mat_rotation, 0, 0, 1, 1.0f);
         sq2.draw_object(loc, loc_color, program, mat_rotation, 0, 1, 0, 1.0f);
         sq3.draw_object(loc, loc_color, program, mat_rotation, 1, 0, 0, 1.0f);

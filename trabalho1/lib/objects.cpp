@@ -11,9 +11,9 @@ void base_object::delete_object(void) {
 void base_object::draw_object(GLint loc, GLint loc_color, GLuint program, float mat_transform[16], float R, float G, float B, float opaccity) {
     loc = glGetUniformLocation(program, "mat_transformation");
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform);
+    glUniform4f(loc_color, R, G, B, opaccity);
     //método, início (n entendi), número de coordenadas
     glDrawArrays(GL_TRIANGLE_FAN, position_on_vector, nvertices);
-    glUniform4f(loc_color, R, G, B, opaccity);
 }
 
 vertices_accumulator* vectorize_objects(std::vector<base_object> objects) {
