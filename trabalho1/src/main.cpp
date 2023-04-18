@@ -32,6 +32,10 @@ int main(void){
     index_end_obj_vec = space_meteor.end_position_on_vector;
     all_objects.push_back(space_meteor);
 
+    planet planet_mars(index_end_obj_vec);
+    index_end_obj_vec = planet_mars.end_position_on_vector;
+    all_objects.push_back(planet_mars);
+
     vertices_accumulator* vaccumulator = vectorize_objects(all_objects);
 
     GLuint buffer;
@@ -69,6 +73,7 @@ int main(void){
         
         space_ship.draw_object(loc, loc_color, program);
         space_meteor.draw_object(loc, loc_color, program);
+        planet_mars.draw_object(loc, loc_color, program);
         
         glfwSwapBuffers(window);
         
@@ -76,6 +81,7 @@ int main(void){
  
     space_ship.delete_object();
     space_meteor.delete_object();
+    planet_mars.delete_object();
     free(vaccumulator->all_objects);
     free(vaccumulator);
 

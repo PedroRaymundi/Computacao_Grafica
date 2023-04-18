@@ -70,3 +70,44 @@ meteor::meteor(int _start_position_on_vector) {
     end_position_on_vector += base_meteor.nvertices;
 
 }
+
+planet::planet(int _start_position_on_vector) {
+    start_position_on_vector = _start_position_on_vector;
+    end_position_on_vector = start_position_on_vector;
+    
+    //Objeto principal de fundo do planeta
+    base_object base_planet(32, end_position_on_vector);
+    float partition = 2*M_PI/32;
+
+    for (int i = 0; i < 32; i++){
+        base_planet.vertices[i].x = 0.3 * sin(partition*i);
+        base_planet.vertices[i].y = 0.3 * cos(partition*i);
+
+        std::cout << base_planet.vertices[i].x << "\n";
+        std::cout << base_planet.vertices[i].y << "\n";
+    }
+    
+    base_planet.R = 0.50;
+    base_planet.G = 0.20;
+    base_planet.B = 0.0;
+    object_element.push_back(base_planet);
+    end_position_on_vector += base_planet.nvertices;
+
+    //Mancha 1 do planeta
+    base_object crater_1(32, end_position_on_vector);
+
+    for (int i = 0; i < 32; i++){
+        crater_1.vertices[i].x = 0.2 + (0.07 * sin(partition*i));
+        crater_1.vertices[i].y = 0.1 + (0.07 * cos(partition*i));
+
+        std::cout << crater_1.vertices[i].x << "\n";
+        std::cout << crater_1.vertices[i].y << "\n";
+    }
+    
+    crater_1.R = 0.70;
+    crater_1.G = 0.20;
+    crater_1.B = 0.0;
+    object_element.push_back(crater_1);
+    end_position_on_vector += crater_1.nvertices;
+
+}

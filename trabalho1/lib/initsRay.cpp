@@ -39,7 +39,11 @@ GLFWwindow* init_window(void) {
 
  
     // criando uma janela
-    GLFWwindow* window = glfwCreateWindow(800, 800, "Minha Janela", NULL, NULL);
+
+    //Modo tela cheia (esta distorcido por enqnt)
+    //GLFWwindow* window = glfwCreateWindow(glfwGetVideoMode(glfwGetPrimaryMonitor())->width, glfwGetVideoMode(glfwGetPrimaryMonitor())->height, "Minha Janela",  glfwGetPrimaryMonitor(), NULL);
+
+     GLFWwindow* window = glfwCreateWindow(800,800, "Minha Janela", NULL, NULL);
 
     
     // tornando a janela como principal 
