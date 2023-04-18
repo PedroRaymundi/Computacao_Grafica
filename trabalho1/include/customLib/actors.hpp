@@ -11,6 +11,9 @@
 class ship : public complex_object {
     public:
         ship(int _start_position_on_vector);
+        static void movement(GLFWwindow* window, int key, int scancode, int action, int mods);
+    private:
+        int speed;
 };
 
 class meteor : public complex_object {

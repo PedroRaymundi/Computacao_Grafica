@@ -1,6 +1,7 @@
 #include "customLib/actors.hpp"
 
-ship::ship(int _start_position_on_vector) {
+ship::ship(int _start_position_on_vector) : speed(0) {
+
     start_position_on_vector = _start_position_on_vector;
     end_position_on_vector = start_position_on_vector;
     base_object base_ship(4, end_position_on_vector);
@@ -34,6 +35,22 @@ ship::ship(int _start_position_on_vector) {
     dk.B = 0.0;
     object_element.push_back(dk);
     end_position_on_vector += dk.nvertices;
+}
+
+void ship::movement(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    printf("Pressionando tecla %d\naction: %d\n\n", key, action);
+    switch (key) {
+    case GLFW_KEY_SPACE:
+        if(action) {
+            //speed = 0.01;
+        } else {
+            //speed = 0;
+        }
+        break;
+    
+    default:
+        break;
+    }
 }
 
 meteor::meteor(int _start_position_on_vector) {

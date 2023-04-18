@@ -4,7 +4,6 @@
 #include <glad/glad.h>
 #include "customLib/initsRay.hpp"
 #include "customLib/objects.hpp"
-#include "customLib/controls.hpp"
 #include "customLib/actors.hpp"
 #include <cmath>
 #include <iostream>
@@ -56,7 +55,7 @@ int main(void){
     /*
         TODO: ARRUMAR O KEY EVENT AQUI
     */
-    //n ta funcionando essa m* -> glfwSetKeyCallback(window, key_event);
+    glfwSetKeyCallback(window, ship::movement);
 
     // Exibindo nossa janela
     glfwShowWindow(window);
