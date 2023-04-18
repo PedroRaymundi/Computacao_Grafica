@@ -22,14 +22,26 @@ class base_object {
     public:
         int nvertices;
         int position_on_vector;
+        float R, G, B, opaccity;
         coordinates *vertices;
 
         base_object(int _nvertices, int _position_on_vector);
         void delete_object(void);
-        void draw_object(GLint loc, GLint loc_color, GLuint program, float mat_transform[16], float R, float G, float B, float opaccity);
+};
+
+class complex_object {
+    public:
+        int start_position_on_vector;
+        int end_position_on_vector;
+        float transformation_matrix[16];
+        std::vector<base_object> object_element; 
+        
+        complex_object();
+        void draw_object(GLint loc, GLint loc_color, GLuint program);
+        void delete_object(void);
 };
 
 
-vertices_accumulator* vectorize_objects(std::vector<base_object> objects);
+vertices_accumulator* vectorize_objects(std::vector<complex_object> objects);
 
 #endif
