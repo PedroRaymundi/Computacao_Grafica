@@ -88,31 +88,50 @@ int main(void){
     // Exibindo nossa janela
     glfwShowWindow(window);
 
+    const double fpsLimit = 1.0 / 60.0;
+    double lastUpdateTime = 0;  // number of seconds since the last loop
+    double lastFrameTime = 0;   // number of seconds since the last frame
+
     float vel = 0.01;
     while (!glfwWindowShouldClose(window)) {
 
+        double now = glfwGetTime();
+        double deltaTime = now - lastUpdateTime;
+
         glfwPollEvents();
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-        
-        if(alien_y >= 0.9)
-            vel = -0.0005;
-        else if (alien_y <= 0.5)
-            vel = +0.0005;
-        
-        alien_y += vel;
+        // This if-statement only executes once every 60th of a second
+        if ((now - lastFrameTime) >= fpsLimit){
 
-        hiding_alien.t.set_translation(Vector3(alien_x, alien_y, 0.0f));
-    
-        space_ship.draw_object(loc, loc_color, program);
-        space_meteor.draw_object(loc, loc_color, program);
-        hiding_alien.draw_object(loc, loc_color, program);
-        planet_mars.draw_object(loc, loc_color, program);
-        shooting_star.draw_object(loc, loc_color, program);
+            // draw your frame here
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0.0, 0.0, 0.0, 0.0);
+            
+            if(alien_y >= 0.9)
+                vel = -0.0005;
+            else if (alien_y <= 0.5)
+                vel = +0.0005;
+            
+            alien_y += vel;
+
+            hiding_alien.t.set_translation(Vector3(alien_x, alien_y, 0.0f));
         
-        glfwSwapBuffers(window);
+            space_ship.draw_object(loc, loc_color, program);
+            space_meteor.draw_object(loc, loc_color, program);
+            hiding_alien.draw_object(loc, loc_color, program);
+            planet_mars.draw_object(loc, loc_color, program);
+            shooting_star.draw_object(loc, loc_color, program);
         
+        
+            glfwSwapBuffers(window);
+
+            // only set lastFrameTime when you actually draw something
+            lastFrameTime = now;
+        }
+
+        // set lastUpdateTime every iteration
+        lastUpdateTime = now;
+
     }
  
     space_ship.delete_object();
