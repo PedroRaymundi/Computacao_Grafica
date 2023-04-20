@@ -56,8 +56,8 @@ int main(void){
     index_end_obj_vec = hiding_alien.end_position_on_vector;
     all_objects.push_back(hiding_alien);
     //Transladar e rotacionar 
-    alien_y = 0.5;
-    alien_x = 0.5;
+    alien_y = 0.0;
+    alien_x = 0.0;
     hiding_alien.t.set_translation(Vector3(alien_x, alien_y, 0.0));
     hiding_alien.t.set_scale(Vector3(0.5));
 
@@ -65,8 +65,8 @@ int main(void){
     index_end_obj_vec = planet_mars.end_position_on_vector;
     all_objects.push_back(planet_mars);
     //Transladar e redimensionar 
-    planet_mars.t.set_translation(Vector3(0.5, 0.5, 0.0));
-    planet_mars.t.set_scale(Vector3(1.2));
+    planet_mars.t.set_translation(Vector3(0, 0, 0.0));
+    planet_mars.t.set_scale(Vector3(1.1));
 
     vertices_accumulator* vaccumulator = vectorize_objects(all_objects);
 
@@ -96,12 +96,12 @@ int main(void){
     double lastUpdateTime = 0;  // number of seconds since the last loop
     double lastFrameTime = 0;   // number of seconds since the last frame
 
-    const float MOV_SPEED = 0.0005;
+    const float MOV_SPEED = 0.05;
     float vel = 0.01;
 
     // Initial angle the comet will be at
     float orbit_theta = 0.0f;
-    const float orbit_r = 0.5;
+    const float orbit_r = 0.7;
     while (!glfwWindowShouldClose(window)) {
 
         double now = glfwGetTime();
@@ -114,21 +114,21 @@ int main(void){
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.0, 0.0, 0.0, 0.0);
 
+            orbit_theta += MOV_SPEED;
+//            if (orbit_theta >= 2 * _PI) orbit_theta -= 2 * _PI;
+
             Vector3 comet_pos(orbit_r * cos(orbit_theta),
                               orbit_r * sin(orbit_theta),
                               0.0f);
 
             space_meteor.t.identity();
             space_meteor.t.scale(0.7);
-            space_meteor.t.rotate(orbit_theta, Vector3(0.0, 0.0, 1.0));
-            space_meteor.t.translate(comet_pos);
+            space_meteor.t.rotate(_PI_2 + orbit_theta, Vector3(0.0, 0.0, 1.0));
+            space_meteor.t.set_translation(comet_pos);
 
-            orbit_theta += MOV_SPEED;
-            if (orbit_theta >= 2 * _PI) orbit_theta -= 2 * _PI;
-
-            if(alien_y >= 0.9)
+            if(alien_y >= 0.5)
                 vel = -MOV_SPEED;
-            else if (alien_y <= 0.5)
+            else if (alien_y <= 0.0)
                 vel = +MOV_SPEED;
 
             alien_y += vel;
