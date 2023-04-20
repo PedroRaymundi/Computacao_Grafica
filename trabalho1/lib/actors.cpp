@@ -37,22 +37,6 @@ ship::ship(int _start_position_on_vector) : speed(0) {
     end_position_on_vector += dk.nvertices;
 }
 
-void ship::movement(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    printf("Pressionando tecla %d\naction: %d\n\n", key, action);
-    switch (key) {
-    case GLFW_KEY_SPACE:
-        if(action) {
-            //speed = 0.01;
-        } else {
-            //speed = 0;
-        }
-        break;
-    
-    default:
-        break;
-    }
-}
-
 meteor::meteor(int _start_position_on_vector) {
     start_position_on_vector = _start_position_on_vector;
     end_position_on_vector = start_position_on_vector;
@@ -82,9 +66,6 @@ planet::planet(int _start_position_on_vector) {
     for (int i = 0; i < 32; i++){
         base_planet.vertices[i].x = 0.3 * sin(partition*i);
         base_planet.vertices[i].y = 0.3 * cos(partition*i);
-
-        std::cout << base_planet.vertices[i].x << "\n";
-        std::cout << base_planet.vertices[i].y << "\n";
     }
     
     base_planet.R = 0.50;
@@ -99,9 +80,6 @@ planet::planet(int _start_position_on_vector) {
     for (int i = 0; i < 32; i++){
         crater_1.vertices[i].x = 0.2 + (0.07 * sin(partition*i));
         crater_1.vertices[i].y = 0.1 + (0.07 * cos(partition*i));
-
-        std::cout << crater_1.vertices[i].x << "\n";
-        std::cout << crater_1.vertices[i].y << "\n";
     }
     
     crater_1.R = 0.70;

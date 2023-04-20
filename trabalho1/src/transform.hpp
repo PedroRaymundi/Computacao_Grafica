@@ -2,6 +2,8 @@
 * Defines a transform object that is basically a transformation matrix to the position
 * */
 
+#include <iostream>
+#include <cstring>
 #include <cstdlib>
 #include <cmath>
 

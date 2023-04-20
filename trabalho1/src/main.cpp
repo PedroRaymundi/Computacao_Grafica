@@ -5,6 +5,8 @@
 #include "customLib/initsRay.hpp"
 #include "customLib/objects.hpp"
 #include "customLib/actors.hpp"
+#include "customLib/app.hpp"
+#include "customLib/tmptransform.hpp"
 #include <cmath>
 #include <iostream>
 #include <vector>
@@ -15,7 +17,10 @@ mingw32-make
 ./main
 */
 
+
 int main(void){
+    app key_input;
+
     GLFWwindow* window = init_window();
     GLuint program = init_shaders(true);
 
@@ -34,6 +39,8 @@ int main(void){
     planet planet_mars(index_end_obj_vec);
     index_end_obj_vec = planet_mars.end_position_on_vector;
     all_objects.push_back(planet_mars);
+    translate(&planet_mars, 0.2, -0.2);
+    resize(&planet_mars, 0.5);
 
     vertices_accumulator* vaccumulator = vectorize_objects(all_objects);
 
@@ -55,10 +62,8 @@ int main(void){
     GLint loc_color = glGetUniformLocation(program, "color");
 
     //associando eventos de teclas
-    /*
-        TODO: ARRUMAR O KEY EVENT AQUI
-    */
-    glfwSetKeyCallback(window, &space_ship::movement);
+    glfwSetWindowUserPointer(window, &key_input);
+    glfwSetKeyCallback(window, key_cb);
 
     // Exibindo nossa janela
     glfwShowWindow(window);
