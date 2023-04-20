@@ -48,15 +48,20 @@ struct Transform
 {
   float vals[16];
 
+  void identity()
+  {
+      memset(vals, 0x0, 16 * sizeof(float));
+
+      // Setting identity matrix
+      vals[0] = 1.0f;
+      vals[5] = 1.0f;
+      vals[10] = 1.0f;
+      vals[15] = 1.0f;
+  }
+
   Transform()
   {
-    memset(vals, 0x0, 16 * sizeof(float));
-
-    // Setting identity matrix
-    vals[0] = 1.0f;
-    vals[5] = 1.0f;
-    vals[10] = 1.0f;
-    vals[15] = 1.0f;
+    identity();
   }
 
   void scale(Vector3 s)
@@ -98,44 +103,33 @@ struct Transform
     vals[11] = t.z;
   }
   
-  /* Rotates the matrix `theta` radians around the vector specified */
-  void rotate(float theta, Vector3 v)
-  {
-    Transform temp;
-    
-    // Create a new Transform with
-    temp.vals[0] = v.x * v.x * (1 - cos(theta)) + cos(theta);
-    temp.vals[1] = v.y * v.x * (1 - cos(theta)) - v.z * cos(theta);
-    temp.vals[2] = v.z * v.x * (1 - cos(theta)) + v.y * sin(theta);
-    
-    temp.vals[4] = v.x * v.y * (1 - cos(theta)) + v.z * sin(theta);
-    temp.vals[5] = v.y * v.y * (1 - cos(theta)) + cos(theta);
-    temp.vals[6] = v.z * v.y * (1 - cos(theta)) - v.z * sin(theta);
-    
-    temp.vals[8] = v.z * v.x * (1 - cos(theta)) - v.y * sin(theta);
-    temp.vals[9] = v.z * v.y * (1 - cos(theta)) + v.x * sin(theta);
-    temp.vals[10] = v.z * v.z * (1 - cos(theta)) + cos(theta);
-    
-    // Multiply matrices
-    Transform temp2 = (*this) * temp;
-    memcpy(this->vals, temp2.vals, 16 * sizeof(float));
-  }
-  
   void set_rotation(float theta, Vector3 v)
   {
     vals[0] = v.x * v.x * (1 - cos(theta)) + cos(theta);
-    vals[1] = v.y * v.x * (1 - cos(theta)) - v.z * cos(theta);
+    vals[1] = v.y * v.x * (1 - cos(theta)) - v.z * sin(theta);
     vals[2] = v.z * v.x * (1 - cos(theta)) + v.y * sin(theta);
 
     vals[4] = v.x * v.y * (1 - cos(theta)) + v.z * sin(theta);
     vals[5] = v.y * v.y * (1 - cos(theta)) + cos(theta);
-    vals[6] = v.z * v.y * (1 - cos(theta)) - v.z * sin(theta);
+    vals[6] = v.z * v.y * (1 - cos(theta)) - v.x * sin(theta);
 
     vals[8] = v.z * v.x * (1 - cos(theta)) - v.y * sin(theta);
     vals[9] = v.z * v.y * (1 - cos(theta)) + v.x * sin(theta);
     vals[10] = v.z * v.z * (1 - cos(theta)) + cos(theta);
   }
   
+  /* Rotates the matrix `theta` radians around the vector specified */
+  void rotate(float theta, Vector3 v)
+  {
+    Transform temp;
+
+    temp.set_rotation(theta, v);
+
+    // Multiply matrices
+    Transform temp2 = (*this) * temp;
+    memcpy(this->vals, temp2.vals, 16 * sizeof(float));
+  }
+
   // Applies the matrix to the vector, adding 1 as the homogeneous component
   Vector3 operator*(const Vector3& v) {
     float vec3[4] = {v.x, v.y, v.z, 1.0f};

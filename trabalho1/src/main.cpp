@@ -16,6 +16,9 @@ mingw32-make
 ./main
 */
 
+#define _PI 3.1415926535
+#define _PI_2 (_PI / 2.0)
+
 int main(void){
     app key_input;
 
@@ -93,7 +96,12 @@ int main(void){
     double lastUpdateTime = 0;  // number of seconds since the last loop
     double lastFrameTime = 0;   // number of seconds since the last frame
 
+    const float MOV_SPEED = 0.0005;
     float vel = 0.01;
+
+    // Initial angle the comet will be at
+    float orbit_theta = 0.0f;
+    const float orbit_r = 0.5;
     while (!glfwWindowShouldClose(window)) {
 
         double now = glfwGetTime();
@@ -103,17 +111,28 @@ int main(void){
 
         // This if-statement only executes once every 60th of a second
         if ((now - lastFrameTime) >= fpsLimit){
-
-            // draw your frame here
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.0, 0.0, 0.0, 0.0);
-            
+
+            Vector3 comet_pos(orbit_r * cos(orbit_theta),
+                              orbit_r * sin(orbit_theta),
+                              0.0f);
+
+            space_meteor.t.identity();
+            space_meteor.t.scale(0.7);
+            space_meteor.t.rotate(orbit_theta, Vector3(0.0, 0.0, 1.0));
+            space_meteor.t.translate(comet_pos);
+
+            orbit_theta += MOV_SPEED;
+            if (orbit_theta >= 2 * _PI) orbit_theta -= 2 * _PI;
+
             if(alien_y >= 0.9)
-                vel = -0.005;
+                vel = -MOV_SPEED;
             else if (alien_y <= 0.5)
-                vel = +0.005;
-            
+                vel = +MOV_SPEED;
+
             alien_y += vel;
+
             space_ship.speed = key_input.key_state[' ']*0.001;
 
             space_ship.move();

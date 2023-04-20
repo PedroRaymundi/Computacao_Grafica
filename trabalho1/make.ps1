@@ -56,7 +56,7 @@ Write-Output "Using $CXX as the C++ compiler."
 $OUT_NAME="trab1_cg.exe"
 
 # Copy GLFW DLL to the build location
-# Copy-Item "$Env:GLFW_DIR\lib-static-ucrt\glfw3.dll" $BUILD
+Copy-Item "$Env:GLFW_DIR\lib-static-ucrt\glfw3.dll" $BUILD
 
 # Actually building now
 $COMP_LINE = "$CXX  "
