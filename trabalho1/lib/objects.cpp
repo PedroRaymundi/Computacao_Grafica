@@ -12,18 +12,14 @@ void base_object::delete_object(void) {
 
 //---------complex object----------
 
-complex_object::complex_object() :
-    transformation_matrix{1.0f, 0.0f, 0.0f, 0.0f, 
-                          0.0f, 1.0f, 0.0f, 0.0f, 
-                          0.0f, 0.0f, 1.0f, 0.0f, 
-                          0.0f, 0.0f, 0.0f, 1.0f} {}
+complex_object::complex_object() {}
 
 void complex_object::draw_object(GLint loc, GLint loc_color, GLuint program) {
     int totelements = object_element.size();
 
     for (int i = 0; i < totelements; i++) {
         loc = glGetUniformLocation(program, "mat_transformation");
-        glUniformMatrix4fv(loc, 1, GL_TRUE, transformation_matrix);
+        glUniformMatrix4fv(loc, 1, GL_TRUE, t.vals);
         glUniform4f(loc_color, object_element[i].R, object_element[i].G, object_element[i].B, object_element[i].opaccity);
         //método, primeira posição no vetor geral de vértices, número de vértices
         glDrawArrays(GL_TRIANGLE_FAN, object_element[i].position_on_vector, object_element[i].nvertices);
@@ -37,9 +33,6 @@ void complex_object::delete_object(void) {
         free(object_element[i].vertices);
     }
 }
-
-
-
 
 vertices_accumulator* vectorize_objects(std::vector<complex_object> objects) {
     vertices_accumulator *ohandler = (vertices_accumulator*) malloc(sizeof(vertices_accumulator));

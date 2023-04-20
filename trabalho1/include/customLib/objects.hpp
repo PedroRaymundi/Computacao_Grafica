@@ -7,6 +7,7 @@
 #include <glad/glad.h>
 #include <iostream>
 #include <vector>
+#include <customLib/transform.hpp>
 
 typedef struct __coordinates__{
     float x, y;
@@ -34,13 +35,13 @@ class complex_object {
         int start_position_on_vector;
         int end_position_on_vector;
         float transformation_matrix[16];
+        Transform t;
         std::vector<base_object> object_element; 
         
         complex_object();
         void draw_object(GLint loc, GLint loc_color, GLuint program);
         void delete_object(void);
 };
-
 
 vertices_accumulator* vectorize_objects(std::vector<complex_object> objects);
 

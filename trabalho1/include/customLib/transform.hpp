@@ -2,6 +2,9 @@
 * Defines a transform object that is basically a transformation matrix to the position
 * */
 
+#ifndef TRANSFORM_H
+#define TRANSFORM_H
+
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
@@ -12,6 +15,11 @@ struct Vector3
   float x, y, z;
   
   Vector3 () { x = y = z = 0.0f; }
+  
+  Vector3 (float _v)
+  {
+    x = y = z = _v;
+  }
   
   Vector3 (float _x, float _y, float _z)
   {
@@ -63,8 +71,14 @@ struct Transform
     
     memcpy(this->vals, temp2.vals, 16 * sizeof(float));
   }
-
-  /* asd asd asd asd */
+  
+  void set_scale(Vector3 s)
+  {
+    vals[0] = s.x;
+    vals[5] = s.y;
+    vals[10] = s.z;
+  }
+  
   void translate(Vector3 t)
   {
     Transform temp;
@@ -75,6 +89,13 @@ struct Transform
     // Multiply matrices
     Transform temp2 = (*this)*temp;
     memcpy(this->vals, temp2.vals, 16 * sizeof(float));
+  }
+  
+  void set_translation(Vector3 t)
+  {
+    vals[3] = t.x;
+    vals[7] = t.y;
+    vals[11] = t.z;
   }
   
   /* Rotates the matrix `theta` radians around the vector specified */
@@ -98,6 +119,21 @@ struct Transform
     // Multiply matrices
     Transform temp2 = (*this) * temp;
     memcpy(this->vals, temp2.vals, 16 * sizeof(float));
+  }
+  
+  void set_rotation(float theta, Vector3 v)
+  {
+    vals[0] = v.x * v.x * (1 - cos(theta)) + cos(theta);
+    vals[1] = v.y * v.x * (1 - cos(theta)) - v.z * cos(theta);
+    vals[2] = v.z * v.x * (1 - cos(theta)) + v.y * sin(theta);
+
+    vals[4] = v.x * v.y * (1 - cos(theta)) + v.z * sin(theta);
+    vals[5] = v.y * v.y * (1 - cos(theta)) + cos(theta);
+    vals[6] = v.z * v.y * (1 - cos(theta)) - v.z * sin(theta);
+
+    vals[8] = v.z * v.x * (1 - cos(theta)) - v.y * sin(theta);
+    vals[9] = v.z * v.y * (1 - cos(theta)) + v.x * sin(theta);
+    vals[10] = v.z * v.z * (1 - cos(theta)) + cos(theta);
   }
   
   // Applies the matrix to the vector, adding 1 as the homogeneous component
@@ -149,3 +185,5 @@ struct Transform
     return ret;
   }
 };
+
+#endif // TRANSFORM_H

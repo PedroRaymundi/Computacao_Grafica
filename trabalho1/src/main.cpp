@@ -6,7 +6,6 @@
 #include "customLib/objects.hpp"
 #include "customLib/actors.hpp"
 #include "customLib/app.hpp"
-#include "customLib/tmptransform.hpp"
 #include <cmath>
 #include <iostream>
 #include <vector>
@@ -16,7 +15,6 @@ cd bin
 mingw32-make
 ./main
 */
-
 
 int main(void){
     app key_input;
@@ -31,51 +29,49 @@ int main(void){
     ship space_ship(index_end_obj_vec);
     index_end_obj_vec = space_ship.end_position_on_vector;
     all_objects.push_back(space_ship);
-    //Transladar e rotacionar 
-    translate(&space_ship, 0.5, -0.6);
-    resize(&space_ship, 0.3);
+    //Transladar e rotacionar
+    space_ship.t.set_translation(Vector3(0.5, -0.6, 0.0));
+    space_ship.t.set_scale(Vector3(0.3));
 
     meteor space_meteor(index_end_obj_vec);
     index_end_obj_vec = space_meteor.end_position_on_vector;
     all_objects.push_back(space_meteor);
     //Transladar e redimensionar 
-    translate(&space_meteor, -0.2, 0.4);
-    resize(&space_meteor, 0.7);
+    space_meteor.t.set_translation(Vector3(-0.2, 0.4, 0.0));
+    space_meteor.t.set_scale(Vector3(0.7));
 
     star shooting_star(index_end_obj_vec);
     index_end_obj_vec = shooting_star.end_position_on_vector;
     all_objects.push_back(shooting_star);
     //Transladar e rotacionar 
-    translate(&shooting_star, -0.6, -0.5);
-    resize(&shooting_star, 0.2);
+    shooting_star.t.set_translation(Vector3(-0.6, -0.5, 0.0));
+    shooting_star.t.set_scale(Vector3(0.2));
 
     float alien_x, alien_y;
     alien hiding_alien(index_end_obj_vec);
     index_end_obj_vec = hiding_alien.end_position_on_vector;
     all_objects.push_back(hiding_alien);
     //Transladar e rotacionar 
-    translate(&hiding_alien, 0.5, 0.5);
     alien_y = 0.5;
     alien_x = 0.5;
-    resize(&hiding_alien, 0.5);
+    hiding_alien.t.set_translation(Vector3(alien_x, alien_y, 0.0));
+    hiding_alien.t.set_scale(Vector3(0.5));
 
     planet planet_mars(index_end_obj_vec);
     index_end_obj_vec = planet_mars.end_position_on_vector;
     all_objects.push_back(planet_mars);
     //Transladar e redimensionar 
-    translate(&planet_mars, 0.5, 0.5);
-    resize(&planet_mars, 1.2);
+    planet_mars.t.set_translation(Vector3(0.5, 0.5, 0.0));
+    planet_mars.t.set_scale(Vector3(1.2));
 
     vertices_accumulator* vaccumulator = vectorize_objects(all_objects);
 
     GLuint buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
     
     // Abaixo, nós enviamos todo o conteúdo da variável vertices.
     glBufferData(GL_ARRAY_BUFFER, sizeof(coordinates)*vaccumulator->nvertices, vaccumulator->all_objects, GL_DYNAMIC_DRAW);
-
 
     // Associando variáveis do programa GLSL (Vertex Shaders) com nossos dados
     GLint loc = glGetAttribLocation(program, "position");
@@ -107,14 +103,13 @@ int main(void){
         
         alien_y += vel;
 
-        translate(&hiding_alien, alien_x, alien_y);
+        hiding_alien.t.set_translation(Vector3(alien_x, alien_y, 0.0f));
     
         space_ship.draw_object(loc, loc_color, program);
         space_meteor.draw_object(loc, loc_color, program);
         hiding_alien.draw_object(loc, loc_color, program);
         planet_mars.draw_object(loc, loc_color, program);
         shooting_star.draw_object(loc, loc_color, program);
-
         
         glfwSwapBuffers(window);
         
@@ -140,6 +135,6 @@ int main(void){
 #include "../lib/initsRay.cpp"
 #include "../lib/objects.cpp"
 #include "../lib/actors.cpp"
+#include "../lib/app.cpp"
 #include "glad.c"
 #endif
-
