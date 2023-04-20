@@ -63,8 +63,21 @@ $COMP_LINE = "$CXX  "
 $COMP_LINE = "$CXX -g $MAIN $CXXFLAGS /Fe:$OUT_NAME /link $LDFLAGS -lglfw3dll -lm"
 
 Set-Location $BUILD
+
+$operation = $args[0]
+
+if ($operation -eq "tests")
+{
+$COMP_LINE = "$CXX -g $WD\src\tests.cpp /Fe:tests.exe -lm"
+Invoke-Expression $COMP_LINE
+Invoke-Expression "./tests.exe"
+}
+else
+{
 Write-Output $COMP_LINE
 Invoke-Expression $COMP_LINE
+}
+
 Set-Location ..
 Write-Output "Finished."
 

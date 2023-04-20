@@ -16,7 +16,6 @@ mingw32-make
 */
 
 int main(void){
-
     GLFWwindow* window = init_window();
     GLuint program = init_shaders(true);
 
@@ -59,7 +58,7 @@ int main(void){
     /*
         TODO: ARRUMAR O KEY EVENT AQUI
     */
-    glfwSetKeyCallback(window, ship::movement);
+    glfwSetKeyCallback(window, &space_ship::movement);
 
     // Exibindo nossa janela
     glfwShowWindow(window);
@@ -95,6 +94,7 @@ int main(void){
 #ifdef _MSC_BUILD
 #include "../lib/initsRay.cpp"
 #include "../lib/objects.cpp"
+#include "../lib/actors.cpp"
 #include "glad.c"
 #endif
 
