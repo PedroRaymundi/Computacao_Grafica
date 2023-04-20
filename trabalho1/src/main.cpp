@@ -47,6 +47,7 @@ int main(void){
     star shooting_star(index_end_obj_vec);
     index_end_obj_vec = shooting_star.end_position_on_vector;
     all_objects.push_back(shooting_star);
+    shooting_star.growth = 1;
     //Transladar e rotacionar 
     shooting_star.t.set_translation(Vector3(-0.6, -0.5, 0.0));
     shooting_star.t.set_scale(Vector3(0.2));
@@ -96,7 +97,7 @@ int main(void){
     double lastUpdateTime = 0;  // number of seconds since the last loop
     double lastFrameTime = 0;   // number of seconds since the last frame
 
-    const float MOV_SPEED = 0.05;
+    const float MOV_SPEED = 0.005;
     float vel = 0.01;
 
     // Initial angle the comet will be at
@@ -133,6 +134,7 @@ int main(void){
 
             alien_y += vel;
 
+            shooting_star.grow(key_input.key_state);
             space_ship.move(key_input.key_state);
             hiding_alien.t.set_translation(Vector3(alien_x, alien_y, 0.0f));
         

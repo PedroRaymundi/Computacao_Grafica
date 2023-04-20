@@ -31,7 +31,10 @@ class planet : public complex_object {
 
 class star : public complex_object {
     public:
+        float growth;
+
         star(int _start_position_on_vetor);
+        void grow(std::map<int, int> key_state);
 };
 
 class alien : public complex_object {

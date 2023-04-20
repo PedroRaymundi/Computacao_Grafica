@@ -144,6 +144,19 @@ meteor::meteor(int _start_position_on_vector) {
 
 }
 
+void star::grow(std::map<int, int> key_state) {
+                //g
+    if (key_state[71]) {
+        growth = 1.01;
+                        //h
+    } else if (key_state[72]) {
+        growth = 0.99;
+    } else if (!(key_state[71]) && !((key_state[72]))) {
+        growth = 1;
+    }
+    t.scale(growth);
+}
+
 alien::alien(int _start_position_on_vector) {
     start_position_on_vector = _start_position_on_vector;
     end_position_on_vector = start_position_on_vector;
