@@ -26,4 +26,14 @@ class planet : public complex_object {
         planet(int _start_position_on_vetor);
 };
 
+class star : public complex_object {
+    public:
+        star(int _start_position_on_vetor);
+};
+
+class alien : public complex_object {
+    public:
+        alien(int _start_position_on_vetor);
+};
+
 #endif

@@ -31,16 +31,37 @@ int main(void){
     ship space_ship(index_end_obj_vec);
     index_end_obj_vec = space_ship.end_position_on_vector;
     all_objects.push_back(space_ship);
+    //Transladar e rotacionar 
+    translate(&space_ship, 0.5, -0.6);
+    resize(&space_ship, 0.3);
 
     meteor space_meteor(index_end_obj_vec);
     index_end_obj_vec = space_meteor.end_position_on_vector;
     all_objects.push_back(space_meteor);
+    //Transladar e redimensionar 
+    translate(&space_meteor, -0.2, 0.4);
+    resize(&space_meteor, 0.7);
+
+    star shooting_star(index_end_obj_vec);
+    index_end_obj_vec = shooting_star.end_position_on_vector;
+    all_objects.push_back(shooting_star);
+    //Transladar e rotacionar 
+    translate(&shooting_star, -0.6, -0.5);
+    resize(&shooting_star, 0.2);
+
+    alien hiding_alien(index_end_obj_vec);
+    index_end_obj_vec = hiding_alien.end_position_on_vector;
+    all_objects.push_back(hiding_alien);
+    //Transladar e rotacionar 
+    translate(&hiding_alien, 0.5, 0.8);
+    resize(&hiding_alien, 0.5);
 
     planet planet_mars(index_end_obj_vec);
     index_end_obj_vec = planet_mars.end_position_on_vector;
     all_objects.push_back(planet_mars);
-    translate(&planet_mars, 0.2, -0.2);
-    resize(&planet_mars, 0.5);
+    //Transladar e redimensionar 
+    translate(&planet_mars, 0.5, 0.5);
+    resize(&planet_mars, 1.2);
 
     vertices_accumulator* vaccumulator = vectorize_objects(all_objects);
 
@@ -77,7 +98,11 @@ int main(void){
         
         space_ship.draw_object(loc, loc_color, program);
         space_meteor.draw_object(loc, loc_color, program);
+        hiding_alien.draw_object(loc, loc_color, program);
         planet_mars.draw_object(loc, loc_color, program);
+        shooting_star.draw_object(loc, loc_color, program);
+       
+
         
         glfwSwapBuffers(window);
         
@@ -86,6 +111,9 @@ int main(void){
     space_ship.delete_object();
     space_meteor.delete_object();
     planet_mars.delete_object();
+    hiding_alien.delete_object();
+    shooting_star.delete_object();
+
     free(vaccumulator->all_objects);
     free(vaccumulator);
 
