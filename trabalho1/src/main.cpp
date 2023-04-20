@@ -133,9 +133,7 @@ int main(void){
 
             alien_y += vel;
 
-            space_ship.speed = key_input.key_state[' ']*0.001;
-
-            space_ship.move();
+            space_ship.move(key_input.key_state);
             hiding_alien.t.set_translation(Vector3(alien_x, alien_y, 0.0f));
         
             space_meteor.draw_object(loc, loc_color, program);

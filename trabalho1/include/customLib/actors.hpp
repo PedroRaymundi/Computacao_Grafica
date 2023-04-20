@@ -7,6 +7,7 @@
 #include "objects.hpp"
 #include <iostream>
 #include <vector>
+#include <map>
 #include <cmath>
 
 class ship : public complex_object {
@@ -15,7 +16,7 @@ class ship : public complex_object {
         float inclination;
 
         ship(int _start_position_on_vector);
-        void move();
+        void move(std::map<int, int> key_state);
 };
 
 class meteor : public complex_object {

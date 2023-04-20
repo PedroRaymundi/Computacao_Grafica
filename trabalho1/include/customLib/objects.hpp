@@ -34,7 +34,6 @@ class complex_object {
     public:
         int start_position_on_vector;
         int end_position_on_vector;
-        float transformation_matrix[16];
         Transform t;
         std::vector<base_object> object_element; 
         

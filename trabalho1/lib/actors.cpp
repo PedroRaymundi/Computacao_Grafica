@@ -37,11 +37,31 @@ ship::ship(int _start_position_on_vector) : speed(0) {
     end_position_on_vector += dk.nvertices;
 }
 
-void ship::move() {
+void ship::move(std::map<int, int> key_state) {
     float x, y;
-    x = speed*cos(inclination)+t.vals[3];
-    y = speed*sin(inclination)+t.vals[7];
 
+    speed = key_state[' ']*0.01;
+    if (key_state[GLFW_KEY_LEFT]) {
+        if (inclination < 4*M_PI) {
+            inclination += 0.1;
+        } else  {
+            inclination = 2*M_PI;
+        }
+    } else if (key_state[GLFW_KEY_RIGHT] > 0) {
+        if (inclination > -2*M_PI) {
+            inclination -= 0.1;
+        } else {
+            inclination = 0;
+        }
+    }
+    
+    x = speed * cos(inclination + M_PI_2) + t.vals[3];
+    y = speed * sin(inclination + M_PI_2) + t.vals[7];
+    //std::cout << inclination << std::endl;
+    //t.set_rotation(inclination, Vector3(0, 0, 1.0));
+    t.identity();
+    t.rotate(inclination, Vector3(0, 0, 1.0));
+    t.scale(0.3);
     t.set_translation(Vector3(x, y, 0.0));
 }
 
