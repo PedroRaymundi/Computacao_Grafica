@@ -35,6 +35,8 @@ void multiply(float* mt1, float* mt2, float* dest) {
 }
 
 void translate(complex_object* obj, float new_x, float new_y) {
+    new_x -= obj->transformation_matrix[3];
+    new_y -= obj->transformation_matrix[7];
     float mat_translation[16] = {
         1.0f, 0.0f, 0.0f, new_x ,
         0.0f, 1.0f, 0.0f, new_y ,

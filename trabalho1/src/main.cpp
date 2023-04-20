@@ -49,11 +49,14 @@ int main(void){
     translate(&shooting_star, -0.6, -0.5);
     resize(&shooting_star, 0.2);
 
+    float alien_x, alien_y;
     alien hiding_alien(index_end_obj_vec);
     index_end_obj_vec = hiding_alien.end_position_on_vector;
     all_objects.push_back(hiding_alien);
     //Transladar e rotacionar 
-    translate(&hiding_alien, 0.5, 0.8);
+    translate(&hiding_alien, 0.5, 0.5);
+    alien_y = 0.5;
+    alien_x = 0.5;
     resize(&hiding_alien, 0.5);
 
     planet planet_mars(index_end_obj_vec);
@@ -89,6 +92,7 @@ int main(void){
     // Exibindo nossa janela
     glfwShowWindow(window);
 
+    float vel = 0.01;
     while (!glfwWindowShouldClose(window)) {
 
         glfwPollEvents();
@@ -96,12 +100,20 @@ int main(void){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0, 0.0, 0.0, 0.0);
         
+        if(alien_y >= 0.9)
+            vel = -0.0005;
+        else if (alien_y <= 0.5)
+            vel = +0.0005;
+        
+        alien_y += vel;
+
+        translate(&hiding_alien, alien_x, alien_y);
+    
         space_ship.draw_object(loc, loc_color, program);
         space_meteor.draw_object(loc, loc_color, program);
         hiding_alien.draw_object(loc, loc_color, program);
         planet_mars.draw_object(loc, loc_color, program);
         shooting_star.draw_object(loc, loc_color, program);
-       
 
         
         glfwSwapBuffers(window);
