@@ -37,6 +37,14 @@ ship::ship(int _start_position_on_vector) : speed(0) {
     end_position_on_vector += dk.nvertices;
 }
 
+void ship::move() {
+    float x, y;
+    x = speed*cos(inclination)+t.vals[3];
+    y = speed*sin(inclination)+t.vals[7];
+
+    t.set_translation(Vector3(x, y, 0.0));
+}
+
 meteor::meteor(int _start_position_on_vector) {
     start_position_on_vector = _start_position_on_vector;
     end_position_on_vector = start_position_on_vector;

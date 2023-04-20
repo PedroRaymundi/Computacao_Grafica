@@ -29,6 +29,7 @@ int main(void){
     ship space_ship(index_end_obj_vec);
     index_end_obj_vec = space_ship.end_position_on_vector;
     all_objects.push_back(space_ship);
+    space_ship.inclination = M_PI/2;
     //Transladar e rotacionar
     space_ship.t.set_translation(Vector3(0.5, -0.6, 0.0));
     space_ship.t.set_scale(Vector3(0.3));
@@ -108,20 +109,21 @@ int main(void){
             glClearColor(0.0, 0.0, 0.0, 0.0);
             
             if(alien_y >= 0.9)
-                vel = -0.0005;
+                vel = -0.005;
             else if (alien_y <= 0.5)
-                vel = +0.0005;
+                vel = +0.005;
             
             alien_y += vel;
+            space_ship.speed = key_input.key_state[' ']*0.001;
 
+            space_ship.move();
             hiding_alien.t.set_translation(Vector3(alien_x, alien_y, 0.0f));
         
-            space_ship.draw_object(loc, loc_color, program);
             space_meteor.draw_object(loc, loc_color, program);
             hiding_alien.draw_object(loc, loc_color, program);
             planet_mars.draw_object(loc, loc_color, program);
             shooting_star.draw_object(loc, loc_color, program);
-        
+            space_ship.draw_object(loc, loc_color, program);
         
             glfwSwapBuffers(window);
 

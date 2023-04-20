@@ -11,9 +11,11 @@
 
 class ship : public complex_object {
     public:
+        float speed;
+        float inclination;
+
         ship(int _start_position_on_vector);
-    private:
-        int speed;
+        void move();
 };
 
 class meteor : public complex_object {
