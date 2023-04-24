@@ -426,3 +426,80 @@ planet::planet(int _start_position_on_vector) {
     end_position_on_vector += crater_5.nvertices;
 
 }
+
+explosion::explosion(int _start_position_on_vector) {
+    start_position_on_vector = _start_position_on_vector;
+    end_position_on_vector = start_position_on_vector;
+
+    //Mancha 1 do planeta
+    float partition = 2*M_PI/32;
+    base_object ball_1(32, end_position_on_vector);
+
+    for (int i = 0; i < 32; i++){
+        ball_1.vertices[i].x = 0.1 + (0.08 * sin(partition*i));
+        ball_1.vertices[i].y = 0.1 + (0.08 * cos(partition*i));
+    }
+    
+    ball_1.R = 1;
+    ball_1.G = 0;
+    ball_1.B = 0;
+    object_element.push_back(ball_1);
+    end_position_on_vector += ball_1.nvertices;
+
+    //Mancha 2 do planeta 
+    base_object ball_2(32, end_position_on_vector);
+
+    for (int i = 0; i < 32; i++){
+        ball_2.vertices[i].x = -0.1 + (0.04 * sin(partition*i));
+        ball_2.vertices[i].y = -0.1 + (0.04 * cos(partition*i));
+    }
+    
+    ball_2.R = 1;
+    ball_2.G = 0.80;
+    ball_2.B = 0.4;
+    object_element.push_back(ball_2);
+    end_position_on_vector += ball_2.nvertices;
+
+    //Mancha 3 do planeta
+    base_object ball_3(32, end_position_on_vector);
+
+    for (int i = 0; i < 32; i++){
+        ball_3.vertices[i].x =  (0.05 * sin(partition*i));
+        ball_3.vertices[i].y =  (0.05 * cos(partition*i)) - 0.1;
+    }
+    
+    ball_3.R = 1;
+    ball_3.G = 0.60;
+    ball_3.B = 0.2;
+    object_element.push_back(ball_3);
+    end_position_on_vector += ball_3.nvertices;
+
+    //Mancha 4 do planeta 
+    base_object ball_4(32, end_position_on_vector);
+
+    for (int i = 0; i < 32; i++){
+        ball_4.vertices[i].x = (0.03 * sin(partition*i)) - 0.05;
+        ball_4.vertices[i].y = (0.03 * cos(partition*i)) - 0.25;
+    }
+
+    ball_4.R = 1;
+    ball_4.G = 0.80;
+    ball_4.B = 0;
+    object_element.push_back(ball_4);
+    end_position_on_vector += ball_4.nvertices;
+
+    //Mancha 5 do planeta 
+    base_object ball_5(32, end_position_on_vector);
+
+    for (int i = 0; i < 32; i++){
+        ball_5.vertices[i].x = (0.05 * sin(partition*i)) - 0.18;
+        ball_5.vertices[i].y = 0.14 + (0.05 * cos(partition*i));
+    }
+
+    ball_5.R = 1;
+    ball_5.G = 0.6;
+    ball_5.B = 0.2;
+    object_element.push_back(ball_5);
+    end_position_on_vector += ball_5.nvertices;
+
+}

@@ -42,4 +42,9 @@ class alien : public complex_object {
         alien(int _start_position_on_vetor);
 };
 
+class explosion : public complex_object {
+    public:
+        explosion(int _start_position_on_vetor);
+};
+
 #endif

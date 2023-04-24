@@ -69,6 +69,14 @@ int main(void){
     planet_mars.t.set_translation(Vector3(0, 0, 0.0));
     planet_mars.t.set_scale(Vector3(1.1));
 
+    explosion actor_explosion(index_end_obj_vec);
+    index_end_obj_vec = actor_explosion.end_position_on_vector;
+    all_objects.push_back(actor_explosion);
+    //Transladar e redimensionar 
+    actor_explosion.t.set_translation(Vector3(0, 0, 0.0));
+    actor_explosion.t.set_scale(Vector3(1.1));
+
+
     vertices_accumulator* vaccumulator = vectorize_objects(all_objects);
 
     GLuint buffer;
@@ -140,9 +148,10 @@ int main(void){
         
             space_meteor.draw_object(loc, loc_color, program);
             hiding_alien.draw_object(loc, loc_color, program);
-            planet_mars.draw_object(loc, loc_color, program);
+            //planet_mars.draw_object(loc, loc_color, program);
             shooting_star.draw_object(loc, loc_color, program);
             space_ship.draw_object(loc, loc_color, program);
+            actor_explosion.draw_object(loc, loc_color, program);
         
             glfwSwapBuffers(window);
 
@@ -160,6 +169,7 @@ int main(void){
     planet_mars.delete_object();
     hiding_alien.delete_object();
     shooting_star.delete_object();
+    actor_explosion.delete_object();
 
     free(vaccumulator->all_objects);
     free(vaccumulator);
