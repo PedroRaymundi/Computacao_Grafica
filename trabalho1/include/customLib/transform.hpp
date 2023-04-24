@@ -10,6 +10,31 @@
 #include <cstdlib>
 #include <cmath>
 
+struct Vector2
+{
+  float x, y;
+
+  static float dist(Vector2 a, Vector2 b)
+  {
+    return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
+  }
+};
+
+struct HitBox
+{
+  Vector2 pos;
+  float radius;
+
+  static bool check_collision(HitBox a, HitBox b)
+  {
+    // Check if the distance is greater than both thresholds
+    float d = Vector2::dist(a.pos, b.pos);
+    if (d <= a.radius || d <= b.radius)
+      return true;
+    return false;
+  }
+};
+
 struct Vector3
 {
   float x, y, z;
@@ -41,6 +66,11 @@ struct Vector3
     }
 
     return ret;
+  }
+
+  Vector3 operator-(const Vector3& v)
+  {
+    return Vector3(this->x - v.x, this->y - v.y, this->z - v.z);
   }
 };
 

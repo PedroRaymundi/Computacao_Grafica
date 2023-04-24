@@ -43,6 +43,7 @@ int main(void){
     //Transladar e redimensionar 
     space_meteor.t.set_translation(Vector3(-0.2, 0.4, 0.0));
     space_meteor.t.set_scale(Vector3(0.7));
+    space_meteor.collided = false;
 
     star shooting_star(index_end_obj_vec);
     index_end_obj_vec = shooting_star.end_position_on_vector;
@@ -54,6 +55,7 @@ int main(void){
 
     float alien_x, alien_y;
     alien hiding_alien(index_end_obj_vec);
+    hiding_alien.collided = false;
     index_end_obj_vec = hiding_alien.end_position_on_vector;
     all_objects.push_back(hiding_alien);
     //Transladar e rotacionar 
@@ -75,7 +77,6 @@ int main(void){
     //Transladar e redimensionar 
     actor_explosion.t.set_translation(Vector3(0, 0, 0.0));
     actor_explosion.t.set_scale(Vector3(1.1));
-
 
     vertices_accumulator* vaccumulator = vectorize_objects(all_objects);
 
@@ -111,6 +112,7 @@ int main(void){
     // Initial angle the comet will be at
     float orbit_theta = 0.0f;
     const float orbit_r = 0.7;
+    int explosion_timeout = 0;
     while (!glfwWindowShouldClose(window)) {
 
         double now = glfwGetTime();
@@ -123,17 +125,38 @@ int main(void){
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.0, 0.0, 0.0, 0.0);
 
-            orbit_theta += MOV_SPEED;
-//            if (orbit_theta >= 2 * _PI) orbit_theta -= 2 * _PI;
+            Vector3 comet_pos;
+            if (!space_meteor.collided)
+            {
+              orbit_theta += MOV_SPEED;
+              comet_pos = Vector3(orbit_r * cos(orbit_theta),
+                                    orbit_r * sin(orbit_theta),
+                                    0.0f);
 
-            Vector3 comet_pos(orbit_r * cos(orbit_theta),
-                              orbit_r * sin(orbit_theta),
-                              0.0f);
 
-            space_meteor.t.identity();
-            space_meteor.t.scale(0.7);
-            space_meteor.t.rotate(_PI_2 + orbit_theta, Vector3(0.0, 0.0, 1.0));
-            space_meteor.t.set_translation(comet_pos);
+                space_meteor.t.identity();
+                space_meteor.t.scale(0.7);
+                space_meteor.t.rotate(_PI_2 + orbit_theta, Vector3(0.0, 0.0, 1.0));
+                space_meteor.t.set_translation(comet_pos);
+            }
+
+            // Checking collisions here
+            if (HitBox::check_collision({{comet_pos.x, comet_pos.y}, 0.3f}, {{space_ship.x, space_ship.y}, 0.3f}))
+            {
+                std::cout << "Meteor\n";
+                space_meteor.collided = true;
+                actor_explosion.t.set_translation(comet_pos);
+                explosion_timeout = 50;
+            }
+
+            // Checking collisions here
+            if (HitBox::check_collision({{alien_x, alien_y}, 0.15f}, {{space_ship.x, space_ship.y}, 0.15f}))
+            {
+                std::cout << "Alien\n";
+                hiding_alien.collided = true;
+                actor_explosion.t.set_translation(Vector3(alien_x, alien_y, 0.0f));
+                explosion_timeout = 50;
+            }
 
             if(alien_y >= 0.5)
                 vel = -MOV_SPEED;
@@ -146,12 +169,17 @@ int main(void){
             space_ship.move(key_input.key_state);
             hiding_alien.t.set_translation(Vector3(alien_x, alien_y, 0.0f));
         
-            space_meteor.draw_object(loc, loc_color, program);
-            hiding_alien.draw_object(loc, loc_color, program);
-            //planet_mars.draw_object(loc, loc_color, program);
+            if (!space_meteor.collided) space_meteor.draw_object(loc, loc_color, program);
+            if (explosion_timeout) {
+                explosion_timeout--;
+                actor_explosion.draw_object(loc, loc_color, program);
+            }
+            if (!hiding_alien.collided) {
+                hiding_alien.draw_object(loc, loc_color, program);
+            }
+            planet_mars.draw_object(loc, loc_color, program);
             shooting_star.draw_object(loc, loc_color, program);
             space_ship.draw_object(loc, loc_color, program);
-            actor_explosion.draw_object(loc, loc_color, program);
         
             glfwSwapBuffers(window);
 

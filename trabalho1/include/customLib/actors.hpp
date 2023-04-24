@@ -14,6 +14,7 @@ class ship : public complex_object {
     public:
         float speed;
         float inclination;
+        float x, y;
 
         ship(int _start_position_on_vector);
         void move(std::map<int, int> key_state);
@@ -21,6 +22,7 @@ class ship : public complex_object {
 
 class meteor : public complex_object {
     public:
+        bool collided;
         meteor(int _start_position_on_vector);
 };
 
@@ -39,6 +41,7 @@ class star : public complex_object {
 
 class alien : public complex_object {
     public:
+        bool collided;
         alien(int _start_position_on_vetor);
 };
 

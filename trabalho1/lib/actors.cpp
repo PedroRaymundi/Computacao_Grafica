@@ -38,8 +38,6 @@ ship::ship(int _start_position_on_vector) : speed(0) {
 }
 
 void ship::move(std::map<int, int> key_state) {
-    float x, y;
-
     speed = key_state[' ']*0.01;
     if (key_state[GLFW_KEY_LEFT]) {
         if (inclination < 4*M_PI) {
