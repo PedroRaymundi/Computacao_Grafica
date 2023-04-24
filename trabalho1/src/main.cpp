@@ -143,7 +143,6 @@ int main(void){
             // Checking collisions here
             if (HitBox::check_collision({{comet_pos.x, comet_pos.y}, 0.3f}, {{space_ship.x, space_ship.y}, 0.3f}))
             {
-                std::cout << "Meteor\n";
                 space_meteor.collided = true;
                 actor_explosion.t.set_translation(comet_pos);
                 explosion_timeout = 50;
@@ -152,7 +151,6 @@ int main(void){
             // Checking collisions here
             if (HitBox::check_collision({{alien_x, alien_y}, 0.15f}, {{space_ship.x, space_ship.y}, 0.15f}))
             {
-                std::cout << "Alien\n";
                 hiding_alien.collided = true;
                 actor_explosion.t.set_translation(Vector3(alien_x, alien_y, 0.0f));
                 explosion_timeout = 50;
