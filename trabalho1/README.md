@@ -1,5 +1,7 @@
 # Trabalho 1
 
+[Slides](https://docs.google.com/presentation/d/1PgXHSm4XEjAWwfmYdciYUD182Th1lXQ7fcwmm6YIrp8/edit#slide=id.g1e1a123b7ce_0_0) sobre o projeto
+
 ## Como executar
 
 O projeto foi compilado para windows, e os executáveis bem como as dependências se encontram no diretório `bin`.
