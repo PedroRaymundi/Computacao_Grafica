@@ -89,3 +89,13 @@ int main(void){
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
+
+#ifdef _MSC_BUILD
+#include "../lib/camera.cpp"
+#include "../lib/initsCG.cpp"
+#include "../lib/mesh.cpp"
+#include "../lib/userInput.cpp"
+#include "../lib/shaderClass.cpp"
+#include "../lib/scenes/hut.cpp"
+#include "glad.c"
+#endif
