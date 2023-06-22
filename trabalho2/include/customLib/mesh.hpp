@@ -36,7 +36,7 @@ class mesh{
         std::vector<int> texture_groups; //Quantos vertices tem cada grupo de textura do objeto
         std::vector<GLuint> texture_id;  //Vetor de id de textura de cada grupo de textura
     public:
-        mesh(GLuint program, std::string filePath, std::vector<texture_info> texturePath ,std::vector < glm::vec3 > & out_vertices, std::vector < glm::vec3 > & out_normals, std::vector < glm::vec2 > & out_uvs, bool cubeMap);
+        mesh(GLuint program, std::string filePath, std::vector<texture_info> texturePath ,std::vector < glm::vec3 > & out_vertices, std::vector < glm::vec3 > & out_normals, std::vector < glm::vec2 > & out_uvs, bool cubeMap = false, bool wolf = false);
         
         //Transformacoes geometricas que podem ser aplicadas ao objeto
         void translate(float tx, float ty, float tz);

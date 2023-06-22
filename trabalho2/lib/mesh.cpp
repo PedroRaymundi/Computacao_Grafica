@@ -41,7 +41,7 @@ void loadCubemap(std::vector<std::string> faces) {
 //Baseada na funcao do respectivo link, entretanto fora realizadas melhorias e adaptacoes ao codigo!
 //http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
 //Funcao para a leitura do arquivo .obj
-bool loadOBJ(const char * path, std::vector < glm::vec3 > & out_vertices, std::vector < glm::vec2 > & out_uvs, std::vector < glm::vec3 > & out_normals, std::vector<int>& texture_groups){
+bool loadOBJ(const char * path, std::vector < glm::vec3 > & out_vertices, std::vector < glm::vec2 > & out_uvs, std::vector < glm::vec3 > & out_normals, std::vector<int>& texture_groups, bool is_wolf = false){
     std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
     std::vector< glm::vec3 > temp_vertices;
     std::vector< glm::vec2 > temp_uvs;
@@ -117,25 +117,39 @@ bool loadOBJ(const char * path, std::vector < glm::vec3 > & out_vertices, std::v
         out_vertices.push_back(vertex);
     }
 
-    //Insere no vetor de coordenadas de textura relativos a cada face segundo o vetor de indices de cada face
-    for(unsigned int i=0; i < uvIndices.size(); i++){
-        unsigned int uvIndex = uvIndices[i];
-        glm::vec2 uv = temp_uvs[ uvIndex-1 ];
-        out_uvs.push_back(uv);
-    }
+	if (is_wolf) {
+		//Insere no vetor de coordenadas de textura relativos a cada face segundo o vetor de indices de cada face
+		for(unsigned int i=0; i < uvIndices.size(); i++){
+			unsigned int uvIndex = uvIndices[i];
+			glm::vec2 uv = temp_uvs[ uvIndex-1 ];
+			uv.y = 1.0f - uv.y;
+			out_uvs.push_back(uv);
+		}	
+	} else {
+		//Insere no vetor de coordenadas de textura relativos a cada face segundo o vetor de indices de cada face
+		for(unsigned int i=0; i < uvIndices.size(); i++){
+			unsigned int uvIndex = uvIndices[i];
+			glm::vec2 uv = temp_uvs[ uvIndex-1 ];
+			//uv.y = 1.0f - uv.y;
+			out_uvs.push_back(uv);
+		}		
+	}
+    
     return true;
 }
 
 
-mesh::mesh(GLuint program, std::string filePath,std::vector<texture_info> textures, std::vector < glm::vec3 > & out_vertices, std::vector < glm::vec3 > & out_normals, std::vector < glm::vec2 > & out_uvs, bool cubeMap){
+mesh::mesh(GLuint program, std::string filePath,std::vector<texture_info> textures, std::vector < glm::vec3 > & out_vertices, std::vector < glm::vec3 > & out_normals, std::vector < glm::vec2 > & out_uvs, bool cubeMap, bool wolf){
     this->filePath = filePath;
     this->program = program;
     this->m_model = glm::mat4(1.0f);
     this->firstVertice_index = out_vertices.size();
     this->texture_id = std::vector<GLuint>(textures.size());
-    
-    //Se houve erro em abrir o .obj joga um excecao
-    if(!loadOBJ(filePath.c_str(), out_vertices, out_uvs, out_normals, this->texture_groups)){
+
+	if (wolf && !loadOBJ(filePath.c_str(), out_vertices, out_uvs, out_normals, this->texture_groups, true)){
+        throw("Unable to get an object from the file");	
+	} else if(!loadOBJ(filePath.c_str(), out_vertices, out_uvs, out_normals, this->texture_groups)){
+		//Se houve erro em abrir o .obj joga um excecao
         throw("Unable to get an object from the file");
     }
 
