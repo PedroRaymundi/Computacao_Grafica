@@ -92,6 +92,12 @@ void camera::move(GLFWwindow* window) {
     if(app_ptr->key_state[GLFW_KEY_LEFT_SHIFT]) {
         this->moveDown();
     }
+	if(app_ptr->key_state['Y']) {
+        this->fov += 0.1f;
+    }
+	if(app_ptr->key_state['U']) {
+        this->fov -= 0.1f;
+    }
 }
 
 void camera::direction(GLFWwindow* window) {

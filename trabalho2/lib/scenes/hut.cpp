@@ -28,6 +28,18 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
 	//textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
+	
+	// Criacao do modelo do nosso lobo awoooo
+	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
+	//textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();
+
+	// Criacao do modelo do nosso lobo awoooo
+	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
+	//textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();
 
     //Envia o vetor de coordenadas dos vertices do cenario para a GPU
     glBufferData(GL_ARRAY_BUFFER, v_vertices.size() * sizeof(glm::vec3), &v_vertices[0], GL_STATIC_DRAW);
@@ -44,7 +56,7 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
 
     //positioning, rotating and scaling objects
     //hut
-    scene_objects[0].scale(0.1f,0.1f,0.1f);
+    scene_objects[0].scale(0.0f,0.0f,0.0f);
     //terrain
     scene_objects[1].scale(15.0f,15.0f,15.0f);
     //skybox
@@ -53,6 +65,8 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
 }
 
 float my_global = 0;
+glm::vec3 wolf_pos(0.0f, 1.0f, 0.0f);
+glm::vec3 wolf_ori(0.0f);
 
 void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
     //atualização da skybox para manter o player sempre ao centro dela
@@ -60,22 +74,53 @@ void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
 	// TODO: insert the wolf following logic
 	// scene_objects[3].m_model = wolf_follow(pos)
 	// Wolf
+	/*
 	glm::mat4 wolf_model = glm::scale(glm::mat4(1.0f), glm::vec3(0.02f, 0.02f, 0.02f));
-	wolf_model = glm::translate(wolf_model, glm::vec3(cos(my_global) * 300.0f, 20.0f, sin(my_global) * 300.0f));
+	//wolf_model = glm::translate(wolf_model, glm::vec3(cos(my_global) * 300.0f, 20.0f, sin(my_global) * 300.0f));
+	wolf_model = glm::translate(wolf_model, pos);
+	*/
+	
 	my_global += 0.1;
 	if (my_global > 3.14 * 2)
 	{
 		my_global = 0;
 	}
 	
+	float y_rot;
+	glm::vec3 diff = pos - wolf_pos;
+	diff = glm::normalize(glm::vec3(diff.x, 0, diff.z));
+	y_rot = acos(diff.x) > 0 ? asin(diff.z) : asin(diff.z) * -1.0f;
+	wolf_pos += diff * 0.02f;
+	
+	glm::mat4 wolf_model;
+	
+	//wolf_model = glm::scale(wolf_model, glm::vec3(0.02f, 0.02f, 0.02f));
+	
 	// Making the wolf follow the player
 	// TODO: store the actual wolf position and make it go forward.
-	wolf_model = glm::translate(wolf_model, pos);
+	//wolf_model = glm::translate(wolf_model, pos);
+	//scene_objects[3].m_model = wolf_model;
+	//glm::mat4 wolf_model = glm::mat4(1.0f);
+	wolf_model = glm::mat4(1.0f);
+	wolf_model = glm::translate(wolf_model, wolf_pos);
+	wolf_model = glm::rotate(wolf_model, y_rot - 3.14f/2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	scene_objects[3].m_model = wolf_model;
-    scene_objects[2].m_model = glm::translate(glm::mat4(1.0f), pos);
+    scene_objects[3].scale(0.01f, 0.01f, 0.01f);
 	
-	// This is doing absolutely NOTHING....
-    scene_objects[2].scale(50.0f, 50.0f, 50.0f); // TODO: the scale can be put inside the model matrix.
+	wolf_model = glm::mat4(1.0f);
+	wolf_model = glm::translate(wolf_model, wolf_pos + glm::vec3(-2.0f, 0.0f, 0.0f));
+	wolf_model = glm::rotate(wolf_model, y_rot - 3.14f/2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	scene_objects[4].m_model = wolf_model;
+    scene_objects[4].scale(0.01f, 0.01f, 0.01f);
+	
+	wolf_model = glm::mat4(1.0f);
+	wolf_model = glm::translate(wolf_model, wolf_pos + glm::vec3(2.0f, 0.0f, 0.0f));
+	wolf_model = glm::rotate(wolf_model, y_rot - 3.14f/2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	scene_objects[5].m_model = wolf_model;
+    scene_objects[5].scale(0.01f, 0.01f, 0.01f);
+	
+    scene_objects[2].m_model = glm::translate(glm::mat4(1.0f), pos);
+    scene_objects[2].scale(50.0f, 50.0f, 50.0f);
     for(int i = 0; i < scene_objects.size(); i++) {
         scene_objects[i].update();
     }

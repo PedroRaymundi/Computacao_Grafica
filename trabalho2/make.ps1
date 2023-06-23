@@ -1,4 +1,4 @@
-# Invokes a Cmd.exe shell script and updates the environment.
+ # Invokes a Cmd.exe shell script and updates the environment.
 function Invoke-CmdScript {
   param(
     [String] $scriptName
