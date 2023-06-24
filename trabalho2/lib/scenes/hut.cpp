@@ -1,14 +1,14 @@
 #include <customLib/scenes/hut.hpp>
 #include <cmath>
 
-inline float randFloat()
+float randFloat()
 {
 	return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 }
 
-inline glm::vec3 randWolf()
+glm::vec3 randWolf()
 {
-	return glm::vec3(randFloat() * 2, 0.0f, randFloat() * 2);
+	return glm::vec3(randFloat() * 10 - 5, 0.0f, randFloat() * 10 - 5);
 }
 
 hut_scene::hut_scene (GLuint program, GLuint* buffer) {
@@ -20,16 +20,16 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
     //Criacao do modelo da malha de cabana com suas respectivas texturas
     textures.push_back({"../obj/cabana/WoodCabinDif.jpg",GL_RGB});
     textures.push_back({"../obj/cabana/WoodCabinDif.jpg",GL_RGB});
-    scene_objects.push_back(mesh(program, "../obj/cabana/cabana.obj", textures, v_vertices, v_normals, v_uvs));
+    scene_objects.push_back(mesh(program, "../obj/cabana/cabana_fix.obj", textures, v_vertices, v_normals, v_uvs));
     textures.clear();
 
 	// Criacao do modelo da skybox
     textures.push_back({"../obj/skybox/dark_horizon.jpg", GL_RGB});
-    scene_objects.push_back(mesh(program, "../obj/skybox/sky.obj", textures, v_vertices, v_normals, v_uvs));
+    scene_objects.push_back(mesh(program, "../obj/skybox/sky.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
 	
     textures.push_back({"../obj/caixas/caixa.jpg", GL_RGB});
-    scene_objects.push_back(mesh(program, "../obj/caixas/caixa.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    scene_objects.push_back(mesh(program, "../obj/caixas/caixa_fix.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
 
 	wolf_start = 3;
@@ -142,7 +142,7 @@ glm::mat4 hut_scene::wolf_logic(glm::vec3 pos, size_t w)
 	float y_rot;
 	glm::vec3 diff = pos - wolf_pos;
 	diff = glm::normalize(glm::vec3(diff.x, 0, diff.z));
-	y_rot = acos(diff.x) > 0 ? asin(diff.z) : asin(diff.z) * -1.0f;
+	y_rot = asin(diff.x) > 0 ? acos(diff.z) : acos(diff.z) * -1.0f;
 	
 	//printf("timer for %d: %d\n", w, wolves_timer[w]);
 	
@@ -168,7 +168,7 @@ glm::mat4 hut_scene::wolf_logic(glm::vec3 pos, size_t w)
 	// Making the wolf follow the player
 	wolf_model = glm::mat4(1.0f);
 	wolf_model = glm::translate(wolf_model, wolf_pos);
-	wolf_model = glm::rotate(wolf_model, y_rot - 3.14f/2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	wolf_model = glm::rotate(wolf_model, y_rot, glm::vec3(0.0f, 1.0f, 0.0f)); //  - 3.14f/2.0f
 		
 	return wolf_model;
 }
@@ -178,7 +178,7 @@ void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
 	// Rotating the light source
     GLint loc_light_pos = glGetUniformLocation(program, "lightPos"); // recuperando localizacao da variavel lightPos na GPU
 
-	light_angle += 0.01;
+	light_angle += 0.07;
 	if (light_angle > M_PI * 2.0f)
 		light_angle -= M_PI * 2;
 
