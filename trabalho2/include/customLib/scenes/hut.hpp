@@ -9,6 +9,8 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtx/transform.hpp>
+#include "customLib/wolf.hpp"
+#include "customLib/knife.hpp"
 
 class hut_scene {
     public:
@@ -18,18 +20,17 @@ class hut_scene {
     
     private:
         GLuint program;
-        GLuint* buffer;    
+        GLuint* buffer;
 
         std::vector< glm::vec3 > v_vertices;  //Vetor de coordenadas de vertices do cenario
         std::vector< glm::vec2 > v_uvs;       //Vetor de coordenadas de textura do cenario 
         std::vector< glm::vec3 > v_normals;   //Vetor de normais do cenario
 		
-		glm::mat4 wolf_logic(glm::vec3 pos, size_t w);
+		glm::mat4 wolf_logic(glm::vec3 pos, size_t w, bool started);
 		
 		size_t wolf_start;
-		std::vector <glm::vec3> wolves;
-		std::vector <int> wolves_timer;
-		std::vector <glm::vec3> wolves_noise;
+		std::vector <Wolf> wolves;
+		Knife wolf_killer_knife;
 };
 
 #endif

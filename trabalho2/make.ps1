@@ -16,7 +16,7 @@ function Invoke-CmdScript {
 Invoke-CmdScript "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
 
 $CXX="cl.exe"
-$CXXFLAGS="/Zi /std:c++17 /EHa /EHsc /wd4005 "
+$CXXFLAGS="/Zi /std:c++17 /EHs /EHsc /wd4005 "
 $LDFLAGS=""
 
 $WD=Get-Location
@@ -30,6 +30,7 @@ $CXXFLAGS+="-I $WD/include "
 
 # GLFW setup
 $CXXFLAGS+="-I $Env:GLFW_DIR/include "
+# $CXXFLAGS+="/fsanitize=address "
 $LDFLAGS+="/LIBPATH:$Env:GLFW_DIR\lib-static-ucrt $Env:GLFW_DIR\lib-static-ucrt\glfw3dll.lib "
 
 # GLAD
@@ -60,7 +61,7 @@ Copy-Item "$Env:GLFW_DIR\lib-static-ucrt\glfw3.dll" $BUILD
 
 # Actually building now
 $COMP_LINE = "$CXX  "
-$COMP_LINE = "$CXX -g $MAIN $CXXFLAGS /Fe:$OUT_NAME /link $LDFLAGS -lglfw3dll -lm"
+$COMP_LINE = "$CXX $MAIN $CXXFLAGS /Fe:$OUT_NAME /link $LDFLAGS"
 
 Set-Location $BUILD
 

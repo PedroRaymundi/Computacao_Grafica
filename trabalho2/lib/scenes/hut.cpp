@@ -32,60 +32,49 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
     scene_objects.push_back(mesh(program, "../obj/caixas/caixa_fix.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
 
-	wolf_start = 3;
+	// Faquinha pra matar os lobiño
+	textures.push_back({"../obj/knife/tex.jpg", GL_RGB});
+	textures.push_back({"../obj/knife/tex.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/knife/model_fix.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();
+
+	wolf_start = 4;
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(randWolf());
-	wolves_timer.push_back(10);
-	wolves_noise.push_back(randWolf());
 	
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(randWolf());
-	wolves_timer.push_back(10);
-	wolves_noise.push_back(randWolf());
 	
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(randWolf());
-	wolves_timer.push_back(10);
-	wolves_noise.push_back(randWolf());
 	
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(randWolf());
-	wolves_timer.push_back(10);
-	wolves_noise.push_back(randWolf());
 	
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(randWolf());
-	wolves_timer.push_back(10);
-	wolves_noise.push_back(randWolf());
 	
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(randWolf());
-	wolves_timer.push_back(10);
-	wolves_noise.push_back(randWolf());
+	wolves.resize(6); // We have 6 wolves.
 	
     //Envia o vetor de coordenadas dos vertices do cenario para a GPU
     glBindBuffer(GL_ARRAY_BUFFER, buffer[0]);
@@ -129,15 +118,23 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
 	//caixas
     scene_objects[2].scale(1.0f, 1.0f, 1.0f);
     scene_objects[2].translate(2.0f, 0.5f, 0.0f);
+	
+	scene_objects[3].scale(10.0f, 10.0f, 10.0f);
 }
 
 glm::vec3 wolf_pos(0.0f, 1.0f, 0.0f);
 glm::vec3 wolf_ori(0.0f);
 float light_angle = 0.0f;
 
-glm::mat4 hut_scene::wolf_logic(glm::vec3 pos, size_t w)
+glm::mat4 hut_scene::wolf_logic(glm::vec3 pos, size_t w, bool started)
 {
-	glm::vec3 wolf_pos = wolves[w];
+	if (!started)
+	{
+		return glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 10.0f, 0.0f));
+	}
+	
+	Wolf wolfy = wolves[w];
+	glm::vec3 wolf_pos = wolfy.pos;
 	
 	float y_rot;
 	glm::vec3 diff = pos - wolf_pos;
@@ -147,29 +144,43 @@ glm::mat4 hut_scene::wolf_logic(glm::vec3 pos, size_t w)
 	//printf("timer for %d: %d\n", w, wolves_timer[w]);
 	
 	// Only move for and undertermined period of time
-	if (wolves_timer[w] < 0)
+	if (wolfy.timer < 0)
 	{
 		//printf("updating wolf position\n");
-		wolf_pos += diff * 0.03f;
 		
-		if (wolves_timer[w] < -100)
+		if (!wolfy.dead) wolf_pos += diff * 0.03f;
+		
+		if (wolfy.timer < -100)
 		{
-			wolves_noise[w] = glm::normalize(randWolf());
-			wolves_timer[w] = rand() % 1000;
+			wolfy.noise = glm::normalize(randWolf());
+			wolfy.timer = rand() % 1000;
 		}
 	}
 	
-	wolves_timer[w] -= 1;
-	wolf_pos += wolves_noise[w] * 0.003f;
-	wolves[w] = wolf_pos;
+	wolfy.timer -= 1;
+	
+	if (!wolfy.dead)
+	{
+		wolf_pos += wolfy.noise * 0.003f;
+		wolfy.pos = wolf_pos;		
+	}
+	else
+	{
+		wolfy.pos = glm::vec3(wolf_pos.x, -10.0f, wolf_pos.z);
+	}
+	wolves[w] = wolfy;
 	
 	glm::mat4 wolf_model;
 
 	// Making the wolf follow the player
 	wolf_model = glm::mat4(1.0f);
 	wolf_model = glm::translate(wolf_model, wolf_pos);
-	wolf_model = glm::rotate(wolf_model, y_rot, glm::vec3(0.0f, 1.0f, 0.0f)); //  - 3.14f/2.0f
-		
+	
+	if (!wolfy.dead)
+	{
+		wolf_model = glm::rotate(wolf_model, y_rot, glm::vec3(0.0f, 1.0f, 0.0f)); //  - 3.14f/2.0f		
+	}
+	
 	return wolf_model;
 }
 
@@ -189,11 +200,15 @@ void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
 	// TODO: insert the wolf following logic
 	// Wolf
 	
-	
 	for (size_t idx = 0 ; idx < wolves.size() ; idx++)
 	{
-		scene_objects[wolf_start + idx].m_model = wolf_logic(pos, idx);
-		scene_objects[wolf_start + idx].scale(0.03f, 0.03f, 0.03f);	
+		// Check if wolf should be dead.
+		if (wolf_killer_knife.taken && glm::length(pos - wolves[idx].pos) < 2.0f)
+		{
+			wolves[idx].dead = true;
+		}
+		scene_objects[wolf_start + idx].m_model = wolf_logic(pos, idx, wolf_killer_knife.taken);
+		scene_objects[wolf_start + idx].scale(0.03f, 0.03f, 0.03f);
 	}
 	
 	//wolf_model = glm::scale(wolf_model, glm::vec3(0.02f, 0.02f, 0.02f));
@@ -204,6 +219,8 @@ void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
     //atualização da skybox para manter o player sempre ao centro dela
     scene_objects[1].m_model = glm::translate(glm::mat4(1.0f), pos);
     scene_objects[1].scale(50.0f, 50.0f, 50.0f);
+
+    scene_objects[3].m_model = wolf_killer_knife.knife_logic(pos, projection);
 
     for(int i = 0; i < scene_objects.size(); i++) {
         scene_objects[i].update(i >= wolf_start && i < (wolf_start + wolves.size()));
