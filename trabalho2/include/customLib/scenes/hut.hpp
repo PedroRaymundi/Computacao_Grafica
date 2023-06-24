@@ -29,6 +29,7 @@ class hut_scene {
 		size_t wolf_start;
 		std::vector <glm::vec3> wolves;
 		std::vector <int> wolves_timer;
+		std::vector <glm::vec3> wolves_noise;
 };
 
 #endif

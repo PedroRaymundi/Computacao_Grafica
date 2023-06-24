@@ -1,6 +1,16 @@
 #include <customLib/scenes/hut.hpp>
 #include <cmath>
 
+inline float randFloat()
+{
+	return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+}
+
+inline glm::vec3 randWolf()
+{
+	return glm::vec3(randFloat() * 2, 0.0f, randFloat() * 2);
+}
+
 hut_scene::hut_scene (GLuint program, GLuint* buffer) {
     this->program = program;
     this->buffer = buffer;
@@ -28,48 +38,54 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(glm::vec3());
+	wolves.push_back(randWolf());
 	wolves_timer.push_back(10);
+	wolves_noise.push_back(randWolf());
 	
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(glm::vec3());
+	wolves.push_back(randWolf());
 	wolves_timer.push_back(10);
+	wolves_noise.push_back(randWolf());
 	
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(glm::vec3());
+	wolves.push_back(randWolf());
 	wolves_timer.push_back(10);
+	wolves_noise.push_back(randWolf());
 	
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(glm::vec3());
+	wolves.push_back(randWolf());
 	wolves_timer.push_back(10);
+	wolves_noise.push_back(randWolf());
 	
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(glm::vec3());
+	wolves.push_back(randWolf());
 	wolves_timer.push_back(10);
+	wolves_noise.push_back(randWolf());
 	
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	wolves.push_back(glm::vec3());
+	wolves.push_back(randWolf());
 	wolves_timer.push_back(10);
+	wolves_noise.push_back(randWolf());
 	
     //Envia o vetor de coordenadas dos vertices do cenario para a GPU
     glBindBuffer(GL_ARRAY_BUFFER, buffer[0]);
@@ -119,37 +135,33 @@ glm::vec3 wolf_pos(0.0f, 1.0f, 0.0f);
 glm::vec3 wolf_ori(0.0f);
 float light_angle = 0.0f;
 
-inline float randFloat()
-{
-	return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-}
-
 glm::mat4 hut_scene::wolf_logic(glm::vec3 pos, size_t w)
 {
 	glm::vec3 wolf_pos = wolves[w];
 	
-	glm::vec3 noise = glm::vec3(randFloat(), randFloat(), randFloat());
-	noise = glm::normalize(noise);
 	float y_rot;
 	glm::vec3 diff = pos - wolf_pos;
 	diff = glm::normalize(glm::vec3(diff.x, 0, diff.z));
 	y_rot = acos(diff.x) > 0 ? asin(diff.z) : asin(diff.z) * -1.0f;
 	
-	printf("timer for %d: %d\n", w, wolves_timer[w]);
+	//printf("timer for %d: %d\n", w, wolves_timer[w]);
 	
 	// Only move for and undertermined period of time
-	if (wolves_timer[w] > 0)
+	if (wolves_timer[w] < 0)
 	{
-		printf("updating wolf position\n");
-		wolf_pos += diff * 0.1f;
-	}
-	wolves_timer[w] -= 1;	
-	if (wolves_timer[w] < -50)
-	{
-		wolves_timer[w] = rand() % 100;
+		//printf("updating wolf position\n");
+		wolf_pos += diff * 0.03f;
+		
+		if (wolves_timer[w] < -100)
+		{
+			wolves_noise[w] = glm::normalize(randWolf());
+			wolves_timer[w] = rand() % 1000;
+		}
 	}
 	
-	wolf_pos += noise * 0.01f;
+	wolves_timer[w] -= 1;
+	wolf_pos += wolves_noise[w] * 0.003f;
+	wolves[w] = wolf_pos;
 	
 	glm::mat4 wolf_model;
 
@@ -184,7 +196,7 @@ void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
 		scene_objects[wolf_start + idx].scale(0.03f, 0.03f, 0.03f);	
 	}
 	
-	wolf_model = glm::scale(wolf_model, glm::vec3(0.02f, 0.02f, 0.02f));
+	//wolf_model = glm::scale(wolf_model, glm::vec3(0.02f, 0.02f, 0.02f));
 	
     //GLint loc_light_pos = glGetUniformLocation(program, "lightPos"); // recuperando localizacao da variavel lightPos na GPU
     //glUniform3f(loc_light_pos, wolf_pos.x, wolf_pos.y, wolf_pos.z); // posicao da fonte de luz
