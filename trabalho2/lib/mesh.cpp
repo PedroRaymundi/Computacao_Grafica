@@ -227,8 +227,8 @@ void mesh::scale(float sx, float sy, float sz){
 
 //Manda a matriz de model para a gpu e desenha o objeto
 void mesh::update(bool wolf){
-    float ka = 0.3; // coeficiente de reflexao ambiente do modelo
-    float kd = 0.3; // coeficiente de reflexao difusa do modelo
+    float ka = 0.4; // coeficiente de reflexao ambiente do modelo
+    float kd = 0.4; // coeficiente de reflexao difusa do modelo
     float ks = 0.9; // coeficiente de reflexao especular do modelo
     float ns = 32; // expoente de reflexao especular
 

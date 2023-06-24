@@ -24,6 +24,10 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
 
+    textures.push_back({"../obj/caixas/caixa.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/caixas/caixa.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();
+
     //Envia o vetor de coordenadas dos vertices do cenario para a GPU
     glBindBuffer(GL_ARRAY_BUFFER, buffer[0]);
     glBufferData(GL_ARRAY_BUFFER, v_vertices.size() * sizeof(glm::vec3), &v_vertices[0], GL_STATIC_DRAW);
@@ -46,7 +50,7 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
     glVertexAttribPointer(loc_normals_coord, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*) 0);
     //luz info
     GLint loc_light_pos = glGetUniformLocation(program, "lightPos"); // recuperando localizacao da variavel lightPos na GPU
-    glUniform3f(loc_light_pos, 0.5f, 0.5f, 0.5f); // posicao da fonte de luz
+    glUniform3f(loc_light_pos, 3.5f, 0.5f, 0.0f); // posicao da fonte de luz
     GLint loc_ka = glGetUniformLocation(program, "ka"); // recuperando localizacao da variavel ka na GPU
     glUniform1f(loc_ka, 0.3); // envia ka pra gpu
     GLint loc_kd = glGetUniformLocation(program, "kd"); // recuperando localizacao da variavel ka na GPU
@@ -61,7 +65,9 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
     scene_objects[0].scale(0.1f,0.1f,0.1f);
     //skybox
     scene_objects[1].scale(15.0f, 15.0f, 15.0f);
-	
+	//caixas
+    scene_objects[3].scale(1.0f, 1.0f, 1.0f);
+    scene_objects[3].translate(2.0f, 0.5f, 0.0f);
 }
 
 glm::vec3 wolf_pos(0.0f, 1.0f, 0.0f);
@@ -71,7 +77,6 @@ void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
 
     //TODO atualizar a textura horrível que eu fiz pra skybox
 	// TODO: insert the wolf following logic
-	// scene_objects[3].m_model = wolf_follow(pos)
 	// Wolf
 	
 	float y_rot;
@@ -82,7 +87,7 @@ void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
 	
 	glm::mat4 wolf_model;
 	
-	//wolf_model = glm::scale(wolf_model, glm::vec3(0.02f, 0.02f, 0.02f));
+	wolf_model = glm::scale(wolf_model, glm::vec3(0.02f, 0.02f, 0.02f));
 	
 	// Making the wolf follow the player
 	wolf_model = glm::mat4(1.0f);
@@ -97,8 +102,11 @@ void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
     scene_objects[1].m_model = glm::translate(glm::mat4(1.0f), pos);
     scene_objects[1].scale(50.0f, 50.0f, 50.0f);
 
-    
-    for(int i = 0; i < scene_objects.size(); i++) {
-        scene_objects[i].update();
+    bool wolf;
+    for(int i = 1; i < scene_objects.size(); i++) {
+        wolf = false;
+        //if(i == 2)
+            //wolf = true;
+        scene_objects[i].update(wolf);
     }
 }
