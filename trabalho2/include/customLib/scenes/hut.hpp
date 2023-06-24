@@ -22,7 +22,13 @@ class hut_scene {
 
         std::vector< glm::vec3 > v_vertices;  //Vetor de coordenadas de vertices do cenario
         std::vector< glm::vec2 > v_uvs;       //Vetor de coordenadas de textura do cenario 
-        std::vector< glm::vec3 > v_normals;   //Vetor de normais do cenario (nao usado neste trabalho!!)
+        std::vector< glm::vec3 > v_normals;   //Vetor de normais do cenario
+		
+		glm::mat4 wolf_logic(glm::vec3 pos, size_t w);
+		
+		size_t wolf_start;
+		std::vector <glm::vec3> wolves;
+		std::vector <int> wolves_timer;
 };
 
 #endif

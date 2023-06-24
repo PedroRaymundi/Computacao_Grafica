@@ -32,7 +32,7 @@ void main(){
    vec3 viewDir = normalize(viewPos - out_fragPos); // direcao do observador/camera
    vec3 reflectDir = normalize(reflect(-lightDir, norm)); // direcao da reflexao
    float spec = pow(max(dot(viewDir, reflectDir), 0.0), ns);
-   vec3 specular = ks * spec * lightColor;             
+   vec3 specular = ks * spec * lightColor;
    
    // aplicando o modelo de iluminacao
    vec4 texture = texture2D(samplerTexture, out_texture);
