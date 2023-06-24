@@ -42,11 +42,9 @@ int main(void){
     //invisible cursor
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     
-    GLuint buffer[2];
-    glGenBuffers(2, buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer[0]);
+    GLuint buffer[3];
+    glGenBuffers(3, buffer);
 
-    //problmea com o mous AQUI
     hut_scene scene1(shaderProgram.ID, buffer);
     
     //set user controls

@@ -116,6 +116,12 @@ bool loadOBJ(const char * path, std::vector < glm::vec3 > & out_vertices, std::v
         glm::vec3 vertex = temp_vertices[ vertexIndex-1 ];
         out_vertices.push_back(vertex);
     }
+    
+    for(unsigned int i=0; i < normalIndices.size(); i++){
+        unsigned int normalIndex = normalIndices[i];
+        glm::vec3 normals = temp_vertices[ normalIndex-1 ];
+        out_normals.push_back(normals);
+    }
 
 	if (is_wolf) {
 		//Insere no vetor de coordenadas de textura relativos a cada face segundo o vetor de indices de cada face
@@ -220,11 +226,32 @@ void mesh::scale(float sx, float sy, float sz){
 }
 
 //Manda a matriz de model para a gpu e desenha o objeto
-void mesh::update(){
+void mesh::update(bool wolf){
+    float ka = 0.3; // coeficiente de reflexao ambiente do modelo
+    float kd = 0.3; // coeficiente de reflexao difusa do modelo
+    float ks = 0.9; // coeficiente de reflexao especular do modelo
+    float ns = 32; // expoente de reflexao especular
+
     //Manda a matriz de model para a gpu
     int loc_model = glGetUniformLocation(program, "model");
     glUniformMatrix4fv(loc_model, 1, GL_FALSE, glm::value_ptr(this->m_model));
     //this->m_model = glm::mat4(1.0f); //Reseta a matriz de model para o proximo frame
+ 
+    if(wolf) {
+        ka = 1;
+        kd = 1;
+        ks = 1;
+        ns = 1000.0;
+    }
+
+    GLint loc_ka = glGetUniformLocation(program, "ka"); // recuperando localizacao da variavel ka na GPU
+    glUniform1f(loc_ka, ka); // envia ka pra gpu
+    GLint loc_kd = glGetUniformLocation(program, "kd"); // recuperando localizacao da variavel ka na GPU
+    glUniform1f(loc_kd, kd); // envia kd pra gpu   
+    GLint loc_ks = glGetUniformLocation(program, "ks"); // recuperando localizacao da variavel ks na GPU
+    glUniform1f(loc_ks, ks); // envia ks pra gpu        
+    GLint loc_ns = glGetUniformLocation(program, "ns"); // recuperando localizacao da variavel ns na GPU
+    glUniform1f(loc_ns, ns); // envia ns pra gpu  
 
     int firstIndex = this->firstVertice_index; //Index do grupo de vertices do objeto
     for(unsigned int i = 0; i < this->texture_groups.size(); i++){ //Para cada grupo de textura do objeto

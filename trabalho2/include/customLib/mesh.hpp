@@ -47,7 +47,7 @@ class mesh{
         glm::mat4 m_model;
 
         //Manda a matriz de model para a gpu e desenha o objeto
-        void update();
+        void update(bool wolf = false);
 };
 
 class CubemapMesh {
