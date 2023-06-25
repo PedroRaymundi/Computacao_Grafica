@@ -57,6 +57,7 @@ int main(void){
     //Inicializa o objeto de camera responsavel por criar as matrizes VIEW e PROJECTION do pipeline MVP
     camera camera(shaderProgram.ID/*program*/, glm::vec3 (1.0), glm::vec3 (1.0,  -4.0, -9.0), glm::vec3 (0.0, 1.0, 0.0), 45, ((float)W_WIDTH/(float)W_HEIGHT), 0.1f, 100.0f, 0.05, false);
 
+
     while (!glfwWindowShouldClose(window) && !user_control.key_state[GLFW_KEY_ESCAPE]) {   
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

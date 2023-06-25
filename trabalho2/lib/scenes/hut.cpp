@@ -48,13 +48,27 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
     textures.clear();
 
     //arvore
-    /*
-    textures.push_back({"../obj/arvore/arvore1.jpg", GL_RGB});
-    scene_objects.push_back(mesh(program, "../obj/arvore/arvore.obj", textures, v_vertices, v_normals, v_uvs, false, true));
-    textures.clear();*/
+    textures.push_back({"../obj/arvore/arvore.jpg", GL_RGB});
+    textures.push_back({"../obj/arvore/arvore.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/arvore/DeadTree_fix.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();
 
+    //arvore
+    textures.push_back({"../obj/arvore/arvore.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/arvore/arvre.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();
 
-	wolf_start = 6;
+    //mochila
+    textures.push_back({"../obj/mochila/mochila.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/mochila/mochila.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();
+    
+    //vhs
+    textures.push_back({"../obj/mesa/vhs.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/mesa/vhs.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();
+
+	wolf_start = 10;
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
@@ -89,7 +103,7 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
 
     //luz info
     GLint loc_light_pos = glGetUniformLocation(program, "lightPos"); // recuperando localizacao da variavel lightPos na GPU
-    glUniform3f(loc_light_pos, 3.5f, 0.5f, 0.0f); // posicao da fonte de luz
+    glUniform3f(loc_light_pos, 0.0f, 3.5f, 0.0f); // posicao da fonte de luz
 
     GLint loc_ka = glGetUniformLocation(program, "ka"); // recuperando localizacao da variavel ka na GPU
     glUniform1f(loc_ka, 0.3); // envia ka pra gpu
@@ -116,6 +130,15 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
     scene_objects[4].translate(0.0f, -10.0f, 0.0f);
     scene_objects[5].scale(5.0f, 0.1f, 15.0f);
     scene_objects[5].translate(0.0f, -9.9f, -0.2f);
+    //arvore
+    scene_objects[6].translate(10.0f, -1.0f, -0.2f);
+    scene_objects[6].scale(0.5f, 0.5f, 0.5f);
+    scene_objects[7].translate(-8.0f, -3.0f, 7.2f);
+    //mochila
+    scene_objects[8].scale(0.8f, 0.8f, 0.8f);
+    scene_objects[8].translate(2.5f, -1.0f, 1.5f);
+    //vhs
+    scene_objects[9].translate(0.0f, -0.5f, -1.0f);
 }
 
 glm::vec3 wolf_pos(0.0f, 1.0f, 0.0f);
@@ -126,7 +149,7 @@ glm::mat4 hut_scene::wolf_logic(glm::vec3 pos, size_t w, bool started)
 {
 	if (!started)
 	{
-		return glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 10.0f, 0.0f));
+		return glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -10.0f, 0.0f));
 	}
 	
 	Wolf wolfy = wolves[w];
@@ -185,7 +208,7 @@ void hut_scene::update(glm::vec3 pos, glm::vec3 projection, app user_control) {
 	// Rotating the light source
     GLint loc_light_pos = glGetUniformLocation(program, "lightPos"); // recuperando localizacao da variavel lightPos na GPU
 
-	light_angle += 0.07;
+	light_angle += 0.0007;
 	if (light_angle > M_PI * 2.0f)
 		light_angle -= M_PI * 2;
 
