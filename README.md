@@ -8,3 +8,7 @@
 - Lighting models
 - [root directory](https://github.com/PedroRaymundi/Computacao_Grafica/tree/main/trabalho2)
 
+### Models
+
+- [Wolf](https://free3d.com/3d-model/gray-wolf-v1--401836.html)
+- [Knife](https://free3d.com/3d-model/kitchen-knife-769920.html)
