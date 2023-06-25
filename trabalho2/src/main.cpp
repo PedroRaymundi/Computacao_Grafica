@@ -74,7 +74,7 @@ int main(void){
         
         //Posicionamento dos modelos no cenario e desenha cada objeto
         //scene1.scene_objects[2].translate(1.0, 0.0, 0.0);
-        scene1.update(camera.pos, camera.front);
+        scene1.update(camera.pos, camera.front, user_control);
 
         glfwSwapBuffers(window);
     }

@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+
 #include <customLib/scenes/hut.hpp>
 #include <cmath>
 
@@ -18,9 +20,8 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
     std::vector<texture_info> textures; //Vetor auxiliar de informacoes de texturas usadas na malha
     
     //Criacao do modelo da malha de cabana com suas respectivas texturas
-    textures.push_back({"../obj/cabana/WoodCabinDif.jpg",GL_RGB});
-    textures.push_back({"../obj/cabana/WoodCabinDif.jpg",GL_RGB});
-    scene_objects.push_back(mesh(program, "../obj/cabana/cabana_fix.obj", textures, v_vertices, v_normals, v_uvs));
+    textures.push_back({"../obj/casa/casa.jpg",GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/casa/casa.obj", textures, v_vertices, v_normals, v_uvs));
     textures.clear();
 
 	// Criacao do modelo da skybox
@@ -38,43 +39,32 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
     scene_objects.push_back(mesh(program, "../obj/knife/model_fix.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
 
-	wolf_start = 4;
+    // terreno
+	textures.push_back({"../obj/terreno/grama.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/terreno/terreno.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();
+    textures.push_back({"../obj/terreno/pedras.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/terreno/terreno.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();
+
+    //arvore
+    /*
+    textures.push_back({"../obj/arvore/arvore1.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/arvore/arvore.obj", textures, v_vertices, v_normals, v_uvs, false, true));
+    textures.clear();*/
+
+
+	wolf_start = 6;
 	// Criacao do modelo do nosso lobo awoooo
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
 	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
-    textures.clear();
 	
 	// Criacao do modelo do nosso lobo awoooo
-	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
-	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
+    scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
     textures.clear();
-	
-	// Criacao do modelo do nosso lobo awoooo
-	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
-	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
-    scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
-    textures.clear();
-	
-	// Criacao do modelo do nosso lobo awoooo
-	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
-	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
-    scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
-    textures.clear();
-	
-	// Criacao do modelo do nosso lobo awoooo
-	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
-	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
-    scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
-    textures.clear();
-	
-	// Criacao do modelo do nosso lobo awoooo
-	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
-	textures.push_back({"../obj/wolf/tex.jpg", GL_RGB});
-    scene_objects.push_back(mesh(program, "../obj/wolf/model_fixtriangle.obj", textures, v_vertices, v_normals, v_uvs, false, true));
-    textures.clear();
-	wolves.resize(6); // We have 6 wolves.
+	wolves.resize(3); // We have 3 wolves.
 	
     //Envia o vetor de coordenadas dos vertices do cenario para a GPU
     glBindBuffer(GL_ARRAY_BUFFER, buffer[0]);
@@ -112,14 +102,20 @@ hut_scene::hut_scene (GLuint program, GLuint* buffer) {
 
     //positioning, rotating and scaling objects
     //hut
-    scene_objects[0].scale(0.1f,0.1f,0.1f);
+    scene_objects[0].scale(0.4f,0.4f,0.4f);
+    scene_objects[0].translate(0.0f, -2.0f, 0.0f);
     //skybox
     scene_objects[1].scale(15.0f, 15.0f, 15.0f);	
 	//caixas
     scene_objects[2].scale(1.0f, 1.0f, 1.0f);
     scene_objects[2].translate(2.0f, 0.5f, 0.0f);
-	
+	//faca
 	scene_objects[3].scale(10.0f, 10.0f, 10.0f);
+    //terreno
+	scene_objects[4].scale(20.0f, 0.1f, 20.0f);
+    scene_objects[4].translate(0.0f, -10.0f, 0.0f);
+    scene_objects[5].scale(5.0f, 0.1f, 15.0f);
+    scene_objects[5].translate(0.0f, -9.9f, -0.2f);
 }
 
 glm::vec3 wolf_pos(0.0f, 1.0f, 0.0f);
@@ -183,8 +179,8 @@ glm::mat4 hut_scene::wolf_logic(glm::vec3 pos, size_t w, bool started)
 	
 	return wolf_model;
 }
-
-void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
+float change = 0;
+void hut_scene::update(glm::vec3 pos, glm::vec3 projection, app user_control) {
 
 	// Rotating the light source
     GLint loc_light_pos = glGetUniformLocation(program, "lightPos"); // recuperando localizacao da variavel lightPos na GPU
@@ -203,14 +199,14 @@ void hut_scene::update(glm::vec3 pos, glm::vec3 projection) {
 	for (size_t idx = 0 ; idx < wolves.size() ; idx++)
 	{
 		// Check if wolf should be dead.
-		if (wolf_killer_knife.taken && glm::length(pos - wolves[idx].pos) < 2.0f)
+		if (wolf_killer_knife.taken && glm::length(pos - wolves[idx].pos) < 2.5f && user_control.key_state[' '] ==GLFW_PRESS)
 		{
 			wolves[idx].dead = true;
 		}
 		scene_objects[wolf_start + idx].m_model = wolf_logic(pos, idx, wolf_killer_knife.taken);
 		scene_objects[wolf_start + idx].scale(0.03f, 0.03f, 0.03f);
 	}
-	
+
 	//wolf_model = glm::scale(wolf_model, glm::vec3(0.02f, 0.02f, 0.02f));
 	
     //GLint loc_light_pos = glGetUniformLocation(program, "lightPos"); // recuperando localizacao da variavel lightPos na GPU

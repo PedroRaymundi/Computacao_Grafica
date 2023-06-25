@@ -86,11 +86,8 @@ void camera::move(GLFWwindow* window) {
     if(app_ptr->key_state['D']) {
         this->moveRight();
     }
-    if(app_ptr->key_state[' ']) {
-        this->moveUp();
-    }
-    if(app_ptr->key_state[GLFW_KEY_LEFT_SHIFT]) {
-        this->moveDown();
+    if(app_ptr->key_state['Q']) {
+        this->freeCamera = true;
     }
 	if(app_ptr->key_state['Y']) {
         this->fov += 0.1f;

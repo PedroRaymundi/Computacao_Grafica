@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include "customLib/mesh.hpp"
+#include "customLib/userInput.hpp"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -15,7 +16,7 @@
 class hut_scene {
     public:
         hut_scene(GLuint program, GLuint* buffer);
-        void update(glm::vec3 pos, glm::vec3 projection);
+        void update(glm::vec3 pos, glm::vec3 projection, app user_control);
         std::vector<mesh> scene_objects;
     
     private:

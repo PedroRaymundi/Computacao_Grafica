@@ -17,7 +17,6 @@ struct Knife
 		{
 			knife_pos = glm::vec3(10.0f, 0.0f, 10.0f);
 			
-			printf("Length %f\n", glm::length(pos - knife_pos));
 			if (glm::length(pos - knife_pos) < 2.0f)
 			{
 				taken = true;

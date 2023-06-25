@@ -30,5 +30,6 @@ void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods) {
     // cast
     app* app_ptr = reinterpret_cast<app*>(ptr);
     // call func
+    //std::cout << key << " " << action << "\n";
     app_ptr->change_state(key, action);
 }
